@@ -1,0 +1,12 @@
+package com.cognizant.onlinefooddeliverysystem.repository;
+
+import com.cognizant.onlinefooddeliverysystem.model.Customer;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import java.util.Optional;
+
+@Repository
+public interface CustomerRepository extends JpaRepository<Customer, Integer> {
+    // The correct method to find a Customer by the User's ID
+    Optional<Customer> findByUser_UserId(Integer userId);
+}
