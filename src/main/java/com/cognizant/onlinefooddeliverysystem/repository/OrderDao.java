@@ -4,9 +4,11 @@ import com.cognizant.onlinefooddeliverysystem.util.OrderId_DeliveryId;
 import com.cognizant.onlinefooddeliverysystem.model.Order;
 import com.cognizant.onlinefooddeliverysystem.dto.UnassignedOrderDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,5 +35,13 @@ public interface OrderDao extends JpaRepository<Order, Integer> {
             "on o.orderid = d.orderid\n" +
             "where o.orderid = :id ", nativeQuery = true)
     Optional<OrderId_DeliveryId> findOrderIdDeliveryID(@Param("id") Integer id);
+
+
+    @Transactional
+    @Modifying
+    @Query(value = "Update `order`\n" +
+            "set statusid = :statusid\n" +
+            "where orderid = :orderid;", nativeQuery = true)
+    int updateOrderStatus(@Param("orderid") Integer orderId, @Param("statusid") Integer statusId);
 
 }

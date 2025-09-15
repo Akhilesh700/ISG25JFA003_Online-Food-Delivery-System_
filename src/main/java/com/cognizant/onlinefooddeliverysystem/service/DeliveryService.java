@@ -116,6 +116,35 @@ public class DeliveryService {
         return new ResponseEntity<>(flag, HttpStatus.ACCEPTED);
     }
 
+    public ResponseEntity<Boolean> updateOrderStatus(Integer orderId, Integer statusId) {
+        boolean flag = false;
+        try{
+            int numberOfRowsAffected = orderDao.updateOrderStatus(orderId, statusId);
+            if(numberOfRowsAffected == 0) {
+                throw  new Exception("Status Not Changed");
+            }else {
+                flag = true;
+            }
+        } catch (Exception e) {
+            System.out.println("Error while updating order " + e.getMessage());
+        }
 
+        return new ResponseEntity<>(flag, HttpStatus.OK);
+    }
+
+    public ResponseEntity<String> findDeliveryStatus(Integer orderId) {
+        String status = null;
+        try{
+            Optional<String> optionalStatus = deliveryDao.getDeliveryStatus(orderId);
+            if(optionalStatus.isPresent()) {
+                status = optionalStatus.get();
+            }else{
+                throw new Exception("Did not found the Status for Id: " + orderId);
+            }
+        }catch (Exception e) {
+            System.out.println("Error while fetching delivery status." + e.getMessage());
+        }
+        return new ResponseEntity<>(status, HttpStatus.OK);
+    }
 
 }
