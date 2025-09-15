@@ -1,8 +1,8 @@
 package com.cognizant.onlinefooddeliverysystem.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -13,6 +13,9 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "Users")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User implements UserDetails {
 
     @Id
@@ -31,13 +34,15 @@ public class User implements UserDetails {
     private UserRole role;
 
     // --- Relationships ---
-
+    @JsonBackReference()
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Customer customer;
 
+    @JsonBackReference()
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Restaurant restaurant;
 
+    @JsonBackReference()
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private DeliveryAgent deliveryAgent;
 
