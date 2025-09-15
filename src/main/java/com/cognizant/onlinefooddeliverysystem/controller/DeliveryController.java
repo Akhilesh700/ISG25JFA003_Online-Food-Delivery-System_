@@ -5,6 +5,7 @@ import com.cognizant.onlinefooddeliverysystem.model.Order;
 import com.cognizant.onlinefooddeliverysystem.dto.UnassignedOrderDTO;
 import com.cognizant.onlinefooddeliverysystem.service.DeliveryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,5 +41,15 @@ public class DeliveryController {
     }
 
 
+    @PutMapping("{orderId}/status")
+    public ResponseEntity<Boolean> updateOrderStatus(@PathVariable("orderId") Integer orderId , @RequestHeader("statusid") Integer statusId){
+        return deliveryService.updateOrderStatus(orderId, statusId);
+    }
+
+
+    @GetMapping("{orderId}/delivery-status")
+    public ResponseEntity<String> getDeliveryStatus(@PathVariable("orderId") Integer orderId){
+        return deliveryService.findDeliveryStatus(orderId);
+    }
 
 }
