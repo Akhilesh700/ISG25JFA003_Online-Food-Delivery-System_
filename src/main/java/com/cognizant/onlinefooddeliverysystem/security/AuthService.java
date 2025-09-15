@@ -40,7 +40,6 @@ public class AuthService {
     public CustomerSignUpResponseDto signUp(CustomerSignUpRequestDto customerSignUpRequestDto) {
         User user = userRepository.findUserByEmail(customerSignUpRequestDto.getEmail()).orElse(null);
         if(user != null) throw new IllegalArgumentException("User already exists with user ID : "+ user.getUserId());
-        String role = "Customer";
         user = userRepository.save(User.builder()
                 .email(customerSignUpRequestDto.getEmail())
                 .password(customerSignUpRequestDto.getPassword())
