@@ -1,6 +1,7 @@
 package com.cognizant.onlinefooddeliverysystem.service;
 
 
+import com.cognizant.onlinefooddeliverysystem.dto.ResponseOrderDTO;
 import com.cognizant.onlinefooddeliverysystem.exception.InvalidRequestException;
 import com.cognizant.onlinefooddeliverysystem.exception.ResourceNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.model.Delivery;
@@ -12,6 +13,7 @@ import com.cognizant.onlinefooddeliverysystem.dto.UnassignedOrderDTO;
 import com.cognizant.onlinefooddeliverysystem.repository.DeliveryAgentDao;
 import com.cognizant.onlinefooddeliverysystem.repository.OrderDao;
 import com.cognizant.onlinefooddeliverysystem.util.ProbabilisticQuantum;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,12 +41,14 @@ public class DeliveryService {
     OrderDao orderDao;
     DeliveryDao deliveryDao;
     DeliveryAgentDao deliveryAgentDao;
+    ModelMapper modelMapper;
 
     @Autowired
-    public DeliveryService(OrderDao orderDao, DeliveryDao deliveryDao, DeliveryAgentDao deliveryAgentDao){
+    public DeliveryService(OrderDao orderDao, DeliveryDao deliveryDao, DeliveryAgentDao deliveryAgentDao, ModelMapper modelMapper){
         this.orderDao = orderDao;
         this.deliveryDao = deliveryDao;
         this.deliveryAgentDao = deliveryAgentDao;
+        this.modelMapper = modelMapper;
     }
 
 
@@ -63,13 +67,13 @@ public class DeliveryService {
     }
 
 
-    public ResponseEntity<Order> findOrderById(Integer orderId)  {
+    public ResponseEntity<ResponseOrderDTO> findOrderById(Integer orderId)  {
 
         logger.info("Fetching order with ID: {}", orderId);
         Order order = orderDao.findOrderByOrderId(orderId)
             .orElseThrow(() -> new ResourceNotFoundException("Error while fetching Order"));
-
-        return new ResponseEntity<>(order,HttpStatus.OK);
+        ResponseOrderDTO responseOrderDTO = modelMapper.map(order, ResponseOrderDTO.class);
+        return new ResponseEntity<>(responseOrderDTO,HttpStatus.OK);
     }
 
     @Transactional
@@ -135,7 +139,11 @@ public class DeliveryService {
         return new ResponseEntity<>(flag, HttpStatus.ACCEPTED);
     }
 
+    @Transactional
     public ResponseEntity<Boolean> updateOrderStatus(Integer orderId, Integer statusId) {
+
+        logger.info("Updating status for order ID: {} to status ID: {}", orderId, statusId);
+
         boolean flag = false;
         try{
             int numberOfRowsAffected = orderDao.updateOrderStatus(orderId, statusId);
@@ -152,17 +160,10 @@ public class DeliveryService {
     }
 
     public ResponseEntity<String> findDeliveryStatus(Integer orderId) {
-        String status = null;
-        try{
-            Optional<String> optionalStatus = deliveryDao.getDeliveryStatus(orderId);
-            if(optionalStatus.isPresent()) {
-                status = optionalStatus.get();
-            }else{
-                throw new Exception("Did not found the Status for Id: " + orderId);
-            }
-        }catch (Exception e) {
-            System.out.println("Error while fetching delivery status." + e.getMessage());
-        }
+        logger.info("Fetching delivery status for order ID: {}", orderId);
+
+        String status = deliveryDao.getDeliveryStatus(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("No status for order id: " + orderId ));
         return new ResponseEntity<>(status, HttpStatus.OK);
     }
 
