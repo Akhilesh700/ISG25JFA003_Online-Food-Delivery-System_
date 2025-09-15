@@ -11,6 +11,8 @@ import com.cognizant.onlinefooddeliverysystem.dto.UnassignedOrderDTO;
 import com.cognizant.onlinefooddeliverysystem.repository.DeliveryAgentDao;
 import com.cognizant.onlinefooddeliverysystem.repository.OrderDao;
 import com.cognizant.onlinefooddeliverysystem.util.ProbabilisticQuantum;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,35 +25,57 @@ import java.util.Optional;
 @Service
 public class DeliveryService {
 
-    @Autowired
+    // Defining Logger
+    private static final Logger logger = LoggerFactory.getLogger(DeliveryService.class);
+
+
+    // Defining constants for magic numbers
+    private static final int PICKUP_TIME_OFFSET_MINUTES = 10;
+    private static final int ESTIMATED_TRAVEL_TIME_MINUTES = 12;
+
+
     OrderDao orderDao;
-
-    @Autowired
     DeliveryDao deliveryDao;
-
-    @Autowired
     DeliveryAgentDao deliveryAgentDao;
 
-    public ResponseEntity<List<UnassignedOrderDTO>> getUnassignedOrders(Integer id) {
-        List<UnassignedOrderDTO> unassignedOrderDTOS = orderDao.findUnassignedOrders(id);
+    @Autowired
+    public DeliveryService(OrderDao orderDao, DeliveryDao deliveryDao, DeliveryAgentDao deliveryAgentDao){
+        this.orderDao = orderDao;
+        this.deliveryDao = deliveryDao;
+        this.deliveryAgentDao = deliveryAgentDao;
+    }
+
+
+
+    public ResponseEntity<List<UnassignedOrderDTO>> getUnassignedOrders(Integer restaurantId) {
+
+        logger.info("Fetching unassigned orders for restaurant ID: {}", restaurantId);
+        List<UnassignedOrderDTO> unassignedOrderDTOS = orderDao.findUnassignedOrders(restaurantId);
         return new ResponseEntity<>(unassignedOrderDTOS, HttpStatus.OK);
     }
 
     public ResponseEntity<List<DeliveryAgent>> getAllAvailableDeliveryAgent() {
+        logger.info("Fetching all available delivery agents");
         List<DeliveryAgent> deliveryAgents = deliveryAgentDao.findAllAvailableDeliveryAgent();
         return new ResponseEntity<>(deliveryAgents, HttpStatus.OK);
     }
 
 
-    public ResponseEntity<Order> findOrderById(Integer id) {
+    public ResponseEntity<Order> findOrderById(Integer orderId)  {
+
+        logger.info("Fetching order with ID: {}", orderId);
+
         Order order = null;
+
         try{
-            Optional<Order> optionalOrder =  orderDao.findOrderByOrderId(id);
-            if(optionalOrder.isPresent()) {
-                order = optionalOrder.get();
-            }else {
-                throw new Exception("Error while fetching Order");
-            }
+            order = orderDao.findOrderByOrderId(orderId)
+                .orElseThrow(() -> new Exception("Error while fetching Order"));
+//            Optional<Order> optionalOrder =  orderDao.findOrderByOrderId(orderId);
+//            if(optionalOrder.isPresent()) {
+//                order = optionalOrder.get();
+//            }else {
+//                throw new Exception("Error while fetching Order");
+//            }
         }catch(Exception e) {
             System.out.println(e.getMessage());
         }
@@ -72,7 +96,7 @@ public class DeliveryService {
 
 
                     List<Integer> deliveryAgentsIds = deliveryAgentDao.findAllAvailableDeliveryAgents();
-                    //TODO: Add the delivery assignment logic.
+
                     Integer AgentId = ProbabilisticQuantum.selectRandomElement(deliveryAgentsIds);
 
                     Optional<DeliveryAgent> optionalDeliveryAgent = deliveryAgentDao.findDeliveryAgentByAgentId(AgentId);
@@ -87,8 +111,8 @@ public class DeliveryService {
                         LocalDateTime DeliveryTime = null;
                         // TODO: add the food preparation time now hardcoding it
                         // pickupTime -> 10m, food prep time -> 20m, -> toDeliverTime -> 12m
-                        // total time of delivery = (20 - 10) + 12 ==> 22m
-                        LocalDateTime eta = LocalDateTime.now().plusMinutes(22);
+                        // total time of delivery = ( 20 ) + 12 ==> 22m
+                        LocalDateTime eta = LocalDateTime.now().plusMinutes(32);
 
                         // will get from UUID
 //                        delivery.setDeliveryId(1221);
