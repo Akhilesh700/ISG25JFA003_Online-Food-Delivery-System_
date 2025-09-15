@@ -2,6 +2,7 @@ package com.cognizant.onlinefooddeliverysystem.service;
 
 
 import com.cognizant.onlinefooddeliverysystem.exception.InvalidRequestException;
+import com.cognizant.onlinefooddeliverysystem.exception.ResourceNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.model.Delivery;
 import com.cognizant.onlinefooddeliverysystem.model.DeliveryAgent;
 import com.cognizant.onlinefooddeliverysystem.repository.DeliveryDao;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -64,25 +66,18 @@ public class DeliveryService {
     public ResponseEntity<Order> findOrderById(Integer orderId)  {
 
         logger.info("Fetching order with ID: {}", orderId);
+        Order order = orderDao.findOrderByOrderId(orderId)
+            .orElseThrow(() -> new ResourceNotFoundException("Error while fetching Order"));
 
-        Order order = null;
-
-        try{
-            order = orderDao.findOrderByOrderId(orderId)
-                .orElseThrow(() -> new Exception("Error while fetching Order"));
-//            Optional<Order> optionalOrder =  orderDao.findOrderByOrderId(orderId);
-//            if(optionalOrder.isPresent()) {
-//                order = optionalOrder.get();
-//            }else {
-//                throw new Exception("Error while fetching Order");
-//            }
-        }catch(Exception e) {
-            System.out.println(e.getMessage());
-        }
         return new ResponseEntity<>(order,HttpStatus.OK);
     }
 
+    @Transactional
     public ResponseEntity<Boolean> assignOrder(Integer id) {
+
+        logger.info("Attempting to assign order with ID: {}", id);
+
+
         boolean flag = false;
         try{
             Optional<OrderId_DeliveryId> optionalOrderIdDeliveryId = orderDao.findOrderIdDeliveryID(id);
