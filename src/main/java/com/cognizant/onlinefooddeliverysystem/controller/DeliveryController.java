@@ -34,12 +34,8 @@ public class DeliveryController {
         return deliveryService.findOrderById(id);
     }
 
-
-
-
-
     @PostMapping("/assign-order/{orderId}")
-    public ResponseEntity<Boolean> assignOrder(Integer id) {
+    public ResponseEntity<Boolean> assignOrder(@PathVariable("id") Integer id) {
         return deliveryService.assignOrder(id);
     }
 
