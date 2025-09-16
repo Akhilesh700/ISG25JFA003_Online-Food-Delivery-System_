@@ -1,4 +1,4 @@
-package com.cognizant.onlinefooddeliverysystem.dto;
+package com.cognizant.onlinefooddeliverysystem.dto.customer;
 
 import com.cognizant.onlinefooddeliverysystem.model.User;
 import lombok.AllArgsConstructor;
@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Data
 @AllArgsConstructor

@@ -1,10 +1,8 @@
-package com.cognizant.onlinefooddeliverysystem.dto;
+package com.cognizant.onlinefooddeliverysystem.dto.customer;
 
-import com.cognizant.onlinefooddeliverysystem.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDate;
 

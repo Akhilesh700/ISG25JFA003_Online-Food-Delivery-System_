@@ -1,4 +1,4 @@
-package com.cognizant.onlinefooddeliverysystem.dto;
+package com.cognizant.onlinefooddeliverysystem.dto.order;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
