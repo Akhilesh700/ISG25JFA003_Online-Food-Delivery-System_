@@ -1,9 +1,7 @@
 package com.cognizant.onlinefooddeliverysystem.model;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -13,6 +11,8 @@ import java.util.Set;
 @Entity
 @Table(name = "Customer")
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Customer {
 
     @Id
