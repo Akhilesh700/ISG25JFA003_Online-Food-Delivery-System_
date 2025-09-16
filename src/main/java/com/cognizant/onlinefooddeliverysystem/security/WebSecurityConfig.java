@@ -1,5 +1,8 @@
 package com.cognizant.onlinefooddeliverysystem.security;
 
+import jakarta.servlet.Filter;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,11 +14,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class WebSecurityConfig {
     @Value("${api.version.path}")
     private String apiVersionPath;
@@ -38,9 +41,12 @@ public class WebSecurityConfig {
                         // Permit all requests to your authentication endpoints
                         .requestMatchers(apiVersionPath + "/auth/**").permitAll()
                         // Require authentication for all other requests
-                        .anyRequest().authenticated()
+                                .requestMatchers(apiVersionPath + "/customer/**").hasAuthority("ROLE_CUSTOMER")
+                                .requestMatchers(apiVersionPath + "/restaurant/**").hasAuthority("ROLE_RESTAURANT")
+                                .requestMatchers(apiVersionPath + "/admin/**").hasAuthority("ROLE_ADMIN")
+                                .anyRequest().authenticated()
                 )
-                // Configure stateless session management
+                // Configuring stateless session management
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 );

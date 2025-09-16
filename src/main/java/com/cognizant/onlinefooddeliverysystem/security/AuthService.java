@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,14 +25,13 @@ public class AuthService {
 
     public LoginResponseDto login(LoginRequestDto loginRequestDto) {
 //        Authentication of User from DAO
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(), loginRequestDto.getPassword())
-        );
-        User user = (User) authentication.getPrincipal();
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(), loginRequestDto.getPassword())
+            );
+            User user = (User) authentication.getPrincipal();
 
 //      Generating the auth token with user object
         String authToken = authUtil.generateJwtToken(user);
-
 
 //      Returning the loginResonseDto object with authToken and userId
         return new LoginResponseDto(authToken, user.getUserId());
@@ -43,7 +43,7 @@ public class AuthService {
         user = userRepository.save(User.builder()
                 .email(customerSignUpRequestDto.getEmail())
                 .password(customerSignUpRequestDto.getPassword())
-                .role(User.UserRole.valueOf("Customer"))
+                .role(User.UserRole.valueOf("ROLE_CUSTOMER"))
                 .build()
         );
         Customer customer = customerRepository.save(Customer.builder()
