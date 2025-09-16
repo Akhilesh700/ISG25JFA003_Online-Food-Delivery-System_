@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface OrderDao extends JpaRepository<Order, Integer> {
+public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     @Query(value = "SELECT o.orderid, r.restid, o.order_time, o.special_req, o.total_amount, s.status_name, c.address, c.name, c.phone\n" +
             "FROM `order` o \n" +
