@@ -22,7 +22,7 @@ public class Restaurant {
     @Column(name = "Name", length = 100, nullable = false)
     private String name;
 
-    @Column(name="imgUrl", length = 500, nullable = false)
+    @Column(name="imgUrl", length = 500)
     private String imgUrl;
 
     @Column(name = "Address", columnDefinition = "TEXT", nullable = false)
@@ -31,7 +31,7 @@ public class Restaurant {
     @Column(name = "Phone", length = 15, nullable = false)
     private String phone;
 
-    @Column(name = "Rating", precision = 2, scale = 1, nullable = false)
+    @Column(name = "Rating", precision = 2, scale = 1, columnDefinition = "DECIMAL(2,1) DEFAULT 0.0")
     private BigDecimal rating;
 
     @Column(name = "OpenTime", nullable = false)
