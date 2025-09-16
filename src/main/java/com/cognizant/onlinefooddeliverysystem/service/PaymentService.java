@@ -10,6 +10,7 @@ import com.cognizant.onlinefooddeliverysystem.repository.OrderRepository;
 import com.cognizant.onlinefooddeliverysystem.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,9 +19,11 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 public class PaymentService {
+    @Autowired
     PaymentRepository paymentRepository;
+    @Autowired
     OrderRepository orderRepository;
-
+    @Autowired
     ModelMapper modelMapper;
 
     @Transactional

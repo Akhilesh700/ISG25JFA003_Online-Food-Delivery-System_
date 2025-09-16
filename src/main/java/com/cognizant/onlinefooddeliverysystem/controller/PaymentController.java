@@ -5,6 +5,7 @@ import com.cognizant.onlinefooddeliverysystem.dto.PaymentRequestDTO;
 import com.cognizant.onlinefooddeliverysystem.dto.PaymentResponseDTO;
 import com.cognizant.onlinefooddeliverysystem.service.PaymentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PaymentController {
 
 
+    @Autowired
     PaymentService paymentService;
 
     //    Initiate
@@ -28,6 +30,9 @@ public class PaymentController {
     }
 
     //    Dummy callback
+
+
+
 
 
     //    status/order/{orderId}
