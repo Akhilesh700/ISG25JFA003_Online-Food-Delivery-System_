@@ -1,6 +1,7 @@
 package com.cognizant.onlinefooddeliverysystem.model;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +13,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "Restaurant")
+@Builder
 public class Restaurant {
 
     @Id
@@ -43,7 +45,7 @@ public class Restaurant {
     // --- Relationships ---
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "UserID", referencedColumnName = "UserID", unique = true)
+    @JoinColumn(name = "UserID",nullable = false, referencedColumnName = "UserID", unique = true)
     private User user;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

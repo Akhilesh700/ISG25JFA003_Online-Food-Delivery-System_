@@ -1,0 +1,56 @@
+2025-09-17 11:05:07 INFO  - ➡️ Method login is called in class AuthController 
+2025-09-17 11:05:07 INFO  - ==================================================
+2025-09-17 11:05:07 INFO  - ==========           NEW HIT         =============
+2025-09-17 11:05:07 INFO  - ==================================================
+2025-09-17 11:05:07 INFO  - 🕒 Timestamp: 2025-09-17 11:05:07
+2025-09-17 11:05:07 INFO  - ➡️ Endpoint Method: login in class: AuthController
+2025-09-17 11:05:07 INFO  - 🔗 Request URL: http://localhost:8080/api/v1/auth/login
+2025-09-17 11:05:07 INFO  - 📨 HTTP Method: POST
+2025-09-17 11:05:07 INFO  - 🌐 Client IP: 0:0:0:0:0:0:0:1
+2025-09-17 11:05:07 INFO  - ➡️ Method login is called in class LoginService 
+2025-09-17 11:05:07 INFO  - ➡️ Method loadUserByUsername is called in class CustomUserDetailService 
+2025-09-17 11:05:07 INFO  - ➡️ Method findUserByEmail is called in class $Proxy140 
+2025-09-17 11:05:07 INFO  - 🎯 Method findUserByEmail of class $Proxy140 has returned
+2025-09-17 11:05:07 INFO  - ✅ Method findUserByEmail from class $Proxy140 is completed
+2025-09-17 11:05:07 INFO  - ⏱️ Method findUserByEmail of class $Proxy140 executed in 10 ms
+2025-09-17 11:05:07 INFO  - 🎯 Method loadUserByUsername of class CustomUserDetailService has returned
+2025-09-17 11:05:07 INFO  - ✅ Method loadUserByUsername from class CustomUserDetailService is completed
+2025-09-17 11:05:07 INFO  - ⏱️ Method loadUserByUsername of class CustomUserDetailService executed in 11 ms
+2025-09-17 11:05:07 INFO  - ➡️ Method generateJwtToken is called in class AuthUtil 
+2025-09-17 11:05:07 INFO  - 🎯 Method generateJwtToken of class AuthUtil has returned
+2025-09-17 11:05:07 INFO  - ✅ Method generateJwtToken from class AuthUtil is completed
+2025-09-17 11:05:07 INFO  - ⏱️ Method generateJwtToken of class AuthUtil executed in 2 ms
+2025-09-17 11:05:07 INFO  - 🎯 Method login of class LoginService has returned
+2025-09-17 11:05:07 INFO  - ✅ Method login from class LoginService is completed
+2025-09-17 11:05:07 INFO  - ⏱️ Method login of class LoginService executed in 13 ms
+2025-09-17 11:05:07 INFO  - 🎯 Method login of class AuthController has returned
+2025-09-17 11:05:07 INFO  - ✅ Method login from class AuthController is completed
+2025-09-17 11:05:07 INFO  - ⏱️ Method login of class AuthController executed in 15 ms
+2025-09-17 11:08:39 INFO  - ➡️ Method restaurantSignUp is called in class AuthController 
+2025-09-17 11:08:39 INFO  - ==================================================
+2025-09-17 11:08:39 INFO  - ==========           NEW HIT         =============
+2025-09-17 11:08:39 INFO  - ==================================================
+2025-09-17 11:08:39 INFO  - 🕒 Timestamp: 2025-09-17 11:08:39
+2025-09-17 11:08:39 INFO  - ➡️ Endpoint Method: restaurantSignUp in class: AuthController
+2025-09-17 11:08:39 INFO  - 🔗 Request URL: http://localhost:8080/api/v1/auth/restaurant/sign-up
+2025-09-17 11:08:39 INFO  - 📨 HTTP Method: POST
+2025-09-17 11:08:39 INFO  - 🌐 Client IP: 0:0:0:0:0:0:0:1
+2025-09-17 11:08:39 INFO  - ➡️ Method restaurantSignUp is called in class SignupService 
+2025-09-17 11:08:39 INFO  - ➡️ Method findUserByEmail is called in class $Proxy140 
+2025-09-17 11:08:39 INFO  - 🎯 Method findUserByEmail of class $Proxy140 has returned
+2025-09-17 11:08:39 INFO  - ✅ Method findUserByEmail from class $Proxy140 is completed
+2025-09-17 11:08:39 INFO  - ⏱️ Method findUserByEmail of class $Proxy140 executed in 15 ms
+2025-09-17 11:08:39 INFO  - ➡️ Method save is called in class $Proxy140 
+2025-09-17 11:08:40 INFO  - 🎯 Method save of class $Proxy140 has returned
+2025-09-17 11:08:40 INFO  - ✅ Method save from class $Proxy140 is completed
+2025-09-17 11:08:40 INFO  - ⏱️ Method save of class $Proxy140 executed in 195 ms
+2025-09-17 11:08:40 INFO  - ➡️ Method save is called in class $Proxy142 
+2025-09-17 11:08:40 INFO  - 🎯 Method save of class $Proxy142 has returned
+2025-09-17 11:08:40 INFO  - ✅ Method save from class $Proxy142 is completed
+2025-09-17 11:08:40 INFO  - ⏱️ Method save of class $Proxy142 executed in 38 ms
+2025-09-17 11:08:40 INFO  - 🎯 Method restaurantSignUp of class SignupService has returned
+2025-09-17 11:08:40 INFO  - ✅ Method restaurantSignUp from class SignupService is completed
+2025-09-17 11:08:40 INFO  - ⏱️ Method restaurantSignUp of class SignupService executed in 264 ms
+2025-09-17 11:08:40 INFO  - 🎯 Method restaurantSignUp of class AuthController has returned
+2025-09-17 11:08:40 INFO  - ✅ Method restaurantSignUp from class AuthController is completed
+2025-09-17 11:08:40 INFO  - ⏱️ Method restaurantSignUp of class AuthController executed in 268 ms

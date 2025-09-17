@@ -7,7 +7,7 @@ import com.cognizant.onlinefooddeliverysystem.model.DeliveryAgent;
 import com.cognizant.onlinefooddeliverysystem.repository.DeliveryDao;
 import com.cognizant.onlinefooddeliverysystem.util.OrderId_DeliveryId;
 import com.cognizant.onlinefooddeliverysystem.model.Order;
-import com.cognizant.onlinefooddeliverysystem.dto.UnassignedOrderDTO;
+import com.cognizant.onlinefooddeliverysystem.dto.order.UnassignedOrderDTO;
 import com.cognizant.onlinefooddeliverysystem.repository.DeliveryAgentDao;
 import com.cognizant.onlinefooddeliverysystem.repository.OrderDao;
 import com.cognizant.onlinefooddeliverysystem.util.ProbabilisticQuantum;

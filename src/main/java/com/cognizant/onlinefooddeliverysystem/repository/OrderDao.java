@@ -2,7 +2,7 @@ package com.cognizant.onlinefooddeliverysystem.repository;
 
 import com.cognizant.onlinefooddeliverysystem.util.OrderId_DeliveryId;
 import com.cognizant.onlinefooddeliverysystem.model.Order;
-import com.cognizant.onlinefooddeliverysystem.dto.UnassignedOrderDTO;
+import com.cognizant.onlinefooddeliverysystem.dto.order.UnassignedOrderDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

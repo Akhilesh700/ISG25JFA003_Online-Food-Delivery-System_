@@ -2,10 +2,9 @@ package com.cognizant.onlinefooddeliverysystem.controller;
 
 import com.cognizant.onlinefooddeliverysystem.model.DeliveryAgent;
 import com.cognizant.onlinefooddeliverysystem.model.Order;
-import com.cognizant.onlinefooddeliverysystem.dto.UnassignedOrderDTO;
+import com.cognizant.onlinefooddeliverysystem.dto.order.UnassignedOrderDTO;
 import com.cognizant.onlinefooddeliverysystem.service.DeliveryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
