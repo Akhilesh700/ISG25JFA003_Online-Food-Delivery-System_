@@ -5,5 +5,8 @@ import lombok.Data;
 @Data
 public class PaymentCallbackDTO {
     private Integer paymentId;
-    private String status;
+    private String type;
+    private String identifier;
+    private Integer pin;
+    private Float amount;
 }
