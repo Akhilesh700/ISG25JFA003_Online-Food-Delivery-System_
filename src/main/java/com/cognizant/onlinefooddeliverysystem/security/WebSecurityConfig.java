@@ -40,12 +40,13 @@ public class WebSecurityConfig {
                 .csrf(csrfConfig -> csrfConfig.disable())
                 .authorizeHttpRequests(auth -> auth
                         // Permit all requests to your authentication endpoints
-                        .requestMatchers(apiVersionPath + "/auth/**").permitAll()
+                        .requestMatchers(apiVersionPath + "/**").permitAll()
+//                        .requestMatchers(apiVersionPath + "/auth/**").permitAll()
                         // Require authentication for all other requests
-                                .requestMatchers(apiVersionPath + "/customer/**").hasAuthority("ROLE_CUSTOMER")
-                                .requestMatchers(apiVersionPath + "/restaurant/**").hasAuthority("ROLE_RESTAURANT")
-                                .requestMatchers(apiVersionPath + "/admin/**").hasAuthority("ROLE_ADMIN")
-                                .anyRequest().authenticated()
+//                                .requestMatchers(apiVersionPath + "/customer/**").hasAuthority("ROLE_CUSTOMER")
+//                                .requestMatchers(apiVersionPath + "/restaurant/**").hasAuthority("ROLE_RESTAURANT")
+//                                .requestMatchers(apiVersionPath + "/admin/**").hasAuthority("ROLE_ADMIN")
+//                                .anyRequest().authenticated()
                 )
                 // Configuring stateless session management
                 .sessionManagement(session -> session
