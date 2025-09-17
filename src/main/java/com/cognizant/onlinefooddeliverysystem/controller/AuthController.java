@@ -1,6 +1,8 @@
 package com.cognizant.onlinefooddeliverysystem.controller;
 
 import com.cognizant.onlinefooddeliverysystem.dto.customer.CustomerSignUpResponseDto;
+import com.cognizant.onlinefooddeliverysystem.dto.deliveryagent.DeliveryAgentSignUpRequestDto;
+import com.cognizant.onlinefooddeliverysystem.dto.deliveryagent.DeliveryAgentSignUpResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.login.LoginRequestDto;
 import com.cognizant.onlinefooddeliverysystem.dto.login.LoginResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.customer.CustomerSignUpRequestDto;
@@ -44,5 +46,9 @@ public class AuthController {
         return ResponseEntity.ok(signupService.restaurantSignUp(restaurantSignupRequestDto));
     }
 
+    @PostMapping("/delivery-agent/sign-up")
+    public ResponseEntity<DeliveryAgentSignUpResponseDto> deliveryAgentSignUp(@RequestBody DeliveryAgentSignUpRequestDto deliveryAgentSignUpRequestDto){
+        return ResponseEntity.ok(signupService.deliveryAgentSignUp(deliveryAgentSignUpRequestDto));
+    }
 
 }
