@@ -58,7 +58,7 @@ public class User implements UserDetails {
 
     // --- Enum for Role ---
     public enum UserRole {
-        ROLE_CUSTOMER, ROLE_RESTAURANT, ROLE_DELIVERYAGENT, ROLE_ADMIN
+        ROLE_CUSTOMER, ROLE_RESTAURANT, ROLE_DELIVERY_AGENT, ROLE_ADMIN
     }
 
     // Getters and Setters are now handled by Lombok
