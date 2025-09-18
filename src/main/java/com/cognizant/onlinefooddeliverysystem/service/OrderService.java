@@ -1,4 +1,8 @@
 package com.cognizant.onlinefooddeliverysystem.service;
 
-public class OrderService {
+
+public interface OrderService {
+
+
+
 }

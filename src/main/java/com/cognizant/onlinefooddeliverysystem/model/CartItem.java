@@ -5,20 +5,25 @@ import lombok.Data;
 
 @Entity
 @Data
-public class CartItems {
+public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cart_items_id")
-    private long cartItemsId;
+    @Column(name = "cart_item_id")
+    private long cartItemId;
 
     @Column(name = "quantity")
     private int quantity;
 
-    @Column(name = "notes")
-    private String notes;
+    @Column(name = "price")
+    private float price;
 
     //Relationship mapping
-    @JoinColumn(name = "Menu_items_id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "menu_item_id")
+    @OneToOne(fetch = FetchType.LAZY)
     private MenuItems menuItems;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cart_id") // This will be the foreign key column in the CartItem table
+    private Cart cart;
+
 }
