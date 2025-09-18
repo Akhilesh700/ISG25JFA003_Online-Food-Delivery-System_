@@ -1,8 +1,13 @@
 package com.cognizant.onlinefooddeliverysystem.model;
 
 import jakarta.persistence.*;
+import lombok.Cleanup;
+import lombok.Data;
+
+import java.util.List;
 
 @Entity
+@Data
 public class Cart {
 
     @Id
@@ -10,13 +15,18 @@ public class Cart {
     @Column(name = "cart_id")
     private long id;
 
+    @Column(name="note")
+    private String note;
+
+    @Column(name = "total_price", nullable = true)
+    private Float totalPrice;
+
     //Relationship mapping
     @JoinColumn(name = "CustID", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     private Customer customer;
 
-    @JoinColumn(name = "cart_items_id", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    private CartItems cartItems;
+    @OneToMany(mappedBy = "cart", fetch = FetchType.LAZY)
+    private List<CartItem> cartItems;
 
 }

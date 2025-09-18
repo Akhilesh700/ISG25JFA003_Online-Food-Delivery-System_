@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface MenuRepository extends JpaRepository<MenuItems, Long> {
@@ -16,4 +17,6 @@ public interface MenuRepository extends JpaRepository<MenuItems, Long> {
 
     @Query("select m from MenuItems m")
     Page<MenuItems> findAllMenuItems(Pageable pageable);
+
+    Optional<MenuItems> findMenuItemsByItemId(Long menuItemId);
 }
