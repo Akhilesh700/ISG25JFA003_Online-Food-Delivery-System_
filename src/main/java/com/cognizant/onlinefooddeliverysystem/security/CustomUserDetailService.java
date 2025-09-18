@@ -1,7 +1,6 @@
 package com.cognizant.onlinefooddeliverysystem.security;
 
 import com.cognizant.onlinefooddeliverysystem.repository.UserRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
