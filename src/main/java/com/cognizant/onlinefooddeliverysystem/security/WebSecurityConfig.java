@@ -32,24 +32,13 @@ public class WebSecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-//    @Bean
-//    public JWTFilter jwtFilter(AuthUtil authUtil, UserRepository userRepository) {
-//        return new JWTFilter(authUtil, userRepository);
-//    }
-
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    public ModelMapper modelMapper(){
-//        return new ModelMapper();
-//    }
-
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomAuthenticationEntryPoint customAuthenticationEntryPoint) throws Exception {
         http
                 .csrf(csrfConfig -> csrfConfig.disable())
                 .authorizeHttpRequests(auth -> auth
@@ -61,6 +50,7 @@ public class WebSecurityConfig {
 //                                .requestMatchers(apiVersionPath + "/admin/**").hasAuthority("ROLE_ADMIN")
                                 .anyRequest().authenticated()
                 )
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(customAuthenticationEntryPoint))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 // Configuring stateless session management
                 .sessionManagement(session -> session
