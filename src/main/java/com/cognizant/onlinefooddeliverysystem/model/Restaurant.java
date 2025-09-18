@@ -1,5 +1,6 @@
 package com.cognizant.onlinefooddeliverysystem.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -48,6 +49,7 @@ public class Restaurant {
     @JoinColumn(name = "UserID",nullable = false, referencedColumnName = "UserID", unique = true)
     private User user;
 
+    @JsonManagedReference("restaurant-menu")
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<MenuItems> menuItems;
 
