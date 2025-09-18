@@ -1,6 +1,7 @@
 package com.cognizant.onlinefooddeliverysystem.exception;
 
 import com.cognizant.onlinefooddeliverysystem.dto.error.ErrorResponse;
+import com.cognizant.onlinefooddeliverysystem.exception.login.NoUsersFoundWithUsername;
 import com.cognizant.onlinefooddeliverysystem.exception.login.WrongCredentialsException;
 import com.cognizant.onlinefooddeliverysystem.exception.signup.UserAlreadyExistsException;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,15 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
+    @ExceptionHandler(NoUsersFoundWithUsername.class)
+        public ResponseEntity<ErrorResponse> handleNoUsersFoundWithUsername(UserAlreadyExistsException ex) {
+            ErrorResponse errorResponse = new ErrorResponse(
+                    HttpStatus.CONFLICT.value(),
+                    "User not found",
+                    ex.getMessage()
+            );
+            return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+        }
 
     // This handler for the specific exception should be before the more generic handler
     @ExceptionHandler(WrongCredentialsException.class)
@@ -42,13 +52,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "An unexpected error occurred",
-                ex.getMessage()
-        );
-        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
+//        ErrorResponse errorResponse = new ErrorResponse(
+//                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+//                "An unexpected error occurred",
+//                ex.getMessage()
+//        );
+//        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
 }
