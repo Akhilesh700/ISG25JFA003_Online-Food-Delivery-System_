@@ -7,7 +7,7 @@ import com.cognizant.onlinefooddeliverysystem.exception.ResourceNotFoundExceptio
 import com.cognizant.onlinefooddeliverysystem.model.Delivery;
 import com.cognizant.onlinefooddeliverysystem.model.DeliveryAgent;
 import com.cognizant.onlinefooddeliverysystem.repository.DeliveryDao;
-import com.cognizant.onlinefooddeliverysystem.util.OrderId_DeliveryId;
+import com.cognizant.onlinefooddeliverysystem.util.OrderIdDeliveryId;
 import com.cognizant.onlinefooddeliverysystem.model.Order;
 import com.cognizant.onlinefooddeliverysystem.dto.order.UnassignedOrderDTO;
 import com.cognizant.onlinefooddeliverysystem.repository.DeliveryAgentDao;
@@ -84,9 +84,9 @@ public class DeliveryService {
 
         boolean flag = false;
         try{
-            Optional<OrderId_DeliveryId> optionalOrderIdDeliveryId = orderRepository.findOrderIdDeliveryID(id);
+            Optional<OrderIdDeliveryId> optionalOrderIdDeliveryId = orderRepository.findOrderIdDeliveryID(id);
             if(optionalOrderIdDeliveryId.isPresent()) {
-                OrderId_DeliveryId orderIdDeliveryId = optionalOrderIdDeliveryId.get();
+                OrderIdDeliveryId orderIdDeliveryId = optionalOrderIdDeliveryId.get();
                 if(orderIdDeliveryId.getDeliveryId() != null) {
                     throw new InvalidRequestException("Order with orderId: " + id + " Already has a delivery assigned");
                 }else {
@@ -96,9 +96,9 @@ public class DeliveryService {
 
                     List<Integer> deliveryAgentsIds = deliveryAgentDao.findAllAvailableDeliveryAgents();
 
-                    Integer AgentId = ProbabilisticQuantum.selectRandomElement(deliveryAgentsIds);
+                    Integer agentId = ProbabilisticQuantum.selectRandomElement(deliveryAgentsIds);
 
-                    Optional<DeliveryAgent> optionalDeliveryAgent = deliveryAgentDao.findDeliveryAgentByAgentId(AgentId);
+                    Optional<DeliveryAgent> optionalDeliveryAgent = deliveryAgentDao.findDeliveryAgentByAgentId(agentId);
                     Optional<Order> optionalOrder = orderRepository.findOrderByOrderId(orderId);
                     if(optionalDeliveryAgent.isPresent() && optionalOrder.isPresent()) {
                         DeliveryAgent deliveryAgent = optionalDeliveryAgent.get();
@@ -107,14 +107,14 @@ public class DeliveryService {
                         Delivery delivery = new Delivery();
 
                         LocalDateTime pickupTime = LocalDateTime.now().plusMinutes(10);
-                        LocalDateTime DeliveryTime = null;
+
                         // TODO: add the food preparation time now hardcoding it
                         // pickupTime -> 10m, food prep time -> 20m, -> toDeliverTime -> 12m
                         // total time of delivery = ( 20 ) + 12 ==> 22m
-                        LocalDateTime eta = LocalDateTime.now().plusMinutes(32);
+                        int totalETA = (20 - PICKUP_TIME_OFFSET_MINUTES ) + PICKUP_TIME_OFFSET_MINUTES + ESTIMATED_TRAVEL_TIME_MINUTES;
+                        LocalDateTime eta = LocalDateTime.now().plusMinutes(totalETA);
 
-                        // will get from UUID
-//                        delivery.setDeliveryId(1221);
+                        // delivery Id get from UUID
                         delivery.setDeliveryTime(null);
                         delivery.setPickupTime(pickupTime);
                         delivery.setEta(eta);

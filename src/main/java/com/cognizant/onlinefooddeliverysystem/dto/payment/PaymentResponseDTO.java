@@ -1,6 +1,5 @@
-package com.cognizant.onlinefooddeliverysystem.dto;
+package com.cognizant.onlinefooddeliverysystem.dto.payment;
 
-import jakarta.persistence.Column;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

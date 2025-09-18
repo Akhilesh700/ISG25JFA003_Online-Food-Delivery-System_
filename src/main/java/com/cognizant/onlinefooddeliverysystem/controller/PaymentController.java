@@ -1,10 +1,10 @@
 package com.cognizant.onlinefooddeliverysystem.controller;
 
 
-import com.cognizant.onlinefooddeliverysystem.dto.PaymentCallbackDTO;
-import com.cognizant.onlinefooddeliverysystem.dto.PaymentRequestDTO;
-import com.cognizant.onlinefooddeliverysystem.dto.PaymentResponseDTO;
-import com.cognizant.onlinefooddeliverysystem.dto.PaymentStatusDTO;
+import com.cognizant.onlinefooddeliverysystem.dto.payment.PaymentCallbackDTO;
+import com.cognizant.onlinefooddeliverysystem.dto.payment.PaymentRequestDTO;
+import com.cognizant.onlinefooddeliverysystem.dto.payment.PaymentResponseDTO;
+import com.cognizant.onlinefooddeliverysystem.dto.payment.PaymentStatusDTO;
 import com.cognizant.onlinefooddeliverysystem.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +20,12 @@ import java.util.List;
 public class PaymentController {
 
 
+    private PaymentService paymentService;
+
     @Autowired
-    PaymentService paymentService;
+    PaymentController(PaymentService paymentService) {
+        this.paymentService = paymentService;
+    }
 
     //    Initiate
 
@@ -38,7 +42,7 @@ public class PaymentController {
         return new ResponseEntity<>("Callback processed payment's transaction ID : " + transactionId, HttpStatus.ACCEPTED);
     }
 
-    //    status/order/{orderId}
+    //    this should return status of the order
     @GetMapping("status/order/{orderId}")
     public ResponseEntity<List<PaymentStatusDTO>> getPaymentStatus(@PathVariable("orderId") Integer orderId ) {
         List<PaymentStatusDTO> list = paymentService.getPaymentStatus(orderId);

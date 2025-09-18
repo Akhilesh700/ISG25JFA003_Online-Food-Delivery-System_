@@ -1,6 +1,6 @@
 package com.cognizant.onlinefooddeliverysystem.repository;
 
-import com.cognizant.onlinefooddeliverysystem.util.OrderId_DeliveryId;
+import com.cognizant.onlinefooddeliverysystem.util.OrderIdDeliveryId;
 import com.cognizant.onlinefooddeliverysystem.model.Order;
 import com.cognizant.onlinefooddeliverysystem.dto.order.UnassignedOrderDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -34,7 +34,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             "left join delivery d\n" +
             "on o.orderid = d.orderid\n" +
             "where o.orderid = :id ", nativeQuery = true)
-    Optional<OrderId_DeliveryId> findOrderIdDeliveryID(@Param("id") Integer id);
+    Optional<OrderIdDeliveryId> findOrderIdDeliveryID(@Param("id") Integer id);
 
 
     @Transactional

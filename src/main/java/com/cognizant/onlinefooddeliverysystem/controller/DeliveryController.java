@@ -14,8 +14,13 @@ import java.util.List;
 @RequestMapping("${api.version.path}/deliveries")
 public class DeliveryController {
 
-    @Autowired
     DeliveryService deliveryService;
+
+    @Autowired
+    DeliveryController(DeliveryService deliveryService){
+        this.deliveryService = deliveryService;
+    }
+
 
     //For the manager's dashboard to display orders ready for delivery.
     @GetMapping("/unassigned")

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 // --- Model Classes (No changes needed here) ---
 
@@ -58,18 +59,10 @@ public final class PaymentConstants {
         UPI_ACCOUNTS.add(new Upi("testuser@payapp", 9999, 1200.0f));
     }
 
-    /**
-     *
-     * @param type
-     * @param identifier
-     * @param pin
-     * @param amount
-     * @return flag
-     */
 
    //Validate Payment
     public static boolean validatePayment(String type, String identifier, int pin, float amount) {
-        logger.info("--- \nAttempting validation for {} payment of ${}...", type.toUpperCase(), amount);
+        logger.info("--- \nAttempting validation for {} payment of ${}...", type.toUpperCase(Locale.getDefault()), amount);
 
         boolean flag = false;
         switch (type.toLowerCase()) {

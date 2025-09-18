@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class OrderId_DeliveryId {
+public class OrderIdDeliveryId {
 
     private Integer orderId;
     private Integer deliveryId;

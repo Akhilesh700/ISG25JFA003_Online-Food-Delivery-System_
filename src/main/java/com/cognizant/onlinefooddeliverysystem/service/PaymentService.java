@@ -2,16 +2,15 @@ package com.cognizant.onlinefooddeliverysystem.service;
 
 
 import com.cognizant.onlinefooddeliverysystem.constant.PaymentConstants;
-import com.cognizant.onlinefooddeliverysystem.dto.PaymentCallbackDTO;
-import com.cognizant.onlinefooddeliverysystem.dto.PaymentRequestDTO;
-import com.cognizant.onlinefooddeliverysystem.dto.PaymentResponseDTO;
-import com.cognizant.onlinefooddeliverysystem.dto.PaymentStatusDTO;
+import com.cognizant.onlinefooddeliverysystem.dto.payment.PaymentCallbackDTO;
+import com.cognizant.onlinefooddeliverysystem.dto.payment.PaymentRequestDTO;
+import com.cognizant.onlinefooddeliverysystem.dto.payment.PaymentResponseDTO;
+import com.cognizant.onlinefooddeliverysystem.dto.payment.PaymentStatusDTO;
 import com.cognizant.onlinefooddeliverysystem.exception.PaymentException;
 import com.cognizant.onlinefooddeliverysystem.model.Order;
 import com.cognizant.onlinefooddeliverysystem.model.Payment;
 import com.cognizant.onlinefooddeliverysystem.repository.OrderRepository;
 import com.cognizant.onlinefooddeliverysystem.repository.PaymentRepository;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,17 +20,28 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
+
 public class PaymentService {
+
+    private final PaymentRepository paymentRepository;
+    private final OrderRepository orderRepository;
+    private final ModelMapper modelMapper;
+
+    private static final String SUCCESSFINALSTRING = "Successful";
+    private static final String PENDINGFINALSTRING = "Pending";
+    private static final String FAILEDFINALSTRING = "Failed";
+
     @Autowired
-    PaymentRepository paymentRepository;
-    @Autowired
-    OrderRepository orderRepository;
-    @Autowired
-    ModelMapper modelMapper;
+    PaymentService(PaymentRepository paymentRepository, OrderRepository orderRepository, ModelMapper modelMapper ){
+        this.paymentRepository = paymentRepository;
+        this.orderRepository = orderRepository;
+        this.modelMapper = modelMapper;
+    }
+
+
+
 
     @Transactional
     public PaymentResponseDTO initiatePayment(PaymentRequestDTO request){
@@ -43,10 +53,10 @@ public class PaymentService {
 
 
         PaymentResponseDTO response;
-        if (payments.stream().anyMatch(p -> p.getPaymentStatus().equalsIgnoreCase("Successful"))) {
+        if (payments.stream().anyMatch(p -> p.getPaymentStatus().equalsIgnoreCase(SUCCESSFINALSTRING))) {
             throw new PaymentException("Payment for order Id : " + order.getOrderId() + " is already successful.");
         }
-        else if (payments.stream().anyMatch(p -> p.getPaymentStatus().equalsIgnoreCase("Successful"))) {
+        else if (payments.stream().anyMatch(p -> p.getPaymentStatus().equalsIgnoreCase(PENDINGFINALSTRING))) {
             throw new PaymentException("Payment for order Id : " + order.getOrderId() + " is already pending.");
         }else {
             // Create new Payment Record
@@ -54,7 +64,7 @@ public class PaymentService {
             payment.setOrder(order);
             payment.setAmount(order.getTotalAmount());
             payment.setMethod(request.getPaymentMethod());
-            payment.setPaymentStatus("Pending");
+            payment.setPaymentStatus(PENDINGFINALSTRING);
             payment.setPaymentType("Pre_Paid");
             payment.setTimestamp(LocalDateTime.now());
 
@@ -75,10 +85,10 @@ public class PaymentService {
         String transactionId = "txn_" + UUID.randomUUID();
 
         if(PaymentConstants.validatePayment(callback.getType(), callback.getIdentifier(), callback.getPin(),callback.getAmount())){
-            payment.setPaymentStatus("Successful");
+            payment.setPaymentStatus(SUCCESSFINALSTRING);
             payment.setTransactionId(transactionId);
         }else {
-            payment.setPaymentStatus("Failed");
+            payment.setPaymentStatus(FAILEDFINALSTRING);
             payment.setTransactionId(transactionId);
         }
 
