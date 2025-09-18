@@ -6,6 +6,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -15,13 +16,14 @@ import java.time.format.DateTimeFormatter;
 
 @Aspect
 @Component
+@EnableAspectJAutoProxy(proxyTargetClass = false)
 public class GlobalLoggingAspect {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GlobalLoggingAspect.class);
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     // Pointcut for all application methods
-    @Pointcut("execution(* com.cognizant.onlinefooddeliverysystem..*(..))")
+    @Pointcut("execution(* com.cognizant.onlinefooddeliverysystem..*(..)) && !within(com.cognizant.onlinefooddeliverysystem.security.JWTFilter)")
     public void applicationPackagePointcut() {}
 
     // Pointcut for controller methods only

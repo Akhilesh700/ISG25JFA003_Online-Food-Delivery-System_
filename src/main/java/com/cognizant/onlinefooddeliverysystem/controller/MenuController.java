@@ -1,5 +1,7 @@
 package com.cognizant.onlinefooddeliverysystem.controller;
 
+import com.cognizant.onlinefooddeliverysystem.dto.menuitem.CreateMenuItemRequestDto;
+import com.cognizant.onlinefooddeliverysystem.dto.menuitem.CreateMenuItemResponseDto;
 import com.cognizant.onlinefooddeliverysystem.model.MenuItems;
 import com.cognizant.onlinefooddeliverysystem.service.MenuService;
 import lombok.AllArgsConstructor;
@@ -11,43 +13,31 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
-@Data
 @RestController
 @AllArgsConstructor
-public class MenuController {
+@RequestMapping("${api.version.path}/menu")
+public class
+MenuController {
     private final MenuService service;
 
-    // Method 1: Created Endpoint for getting all the menu items irrespective of restaurant
-    @GetMapping("/menu")
-    public List<MenuItems> getAllMenu() throws Exception{
-        try {
-            return service.getAllMenu();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    // Method 1: Endpoint for getting all the menu items irrespective of restaurant
+    @GetMapping("")
+    public List<MenuItems> getAllMenu(){
+        return service.getAllMenu();
     }
 
 
-    // Method 2: Created Endpoint for getting all the menu items by restaurant ID
-    @PostMapping("/menu/{restID}")
-    public ResponseEntity<MenuItems> getMenuItemById(@PathVariable Integer restID, @RequestBody MenuItems menuItems) throws Exception {
-        try {
-            MenuItems savedMenu = service.addMenuItem(restID, menuItems);
-            return new ResponseEntity<>(savedMenu, HttpStatus.CREATED);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    // Method 2: Endpoint for adding menu to a restaurant by restId
+    @PostMapping("/{restID}")
+    public ResponseEntity<CreateMenuItemResponseDto> addMenuItemByRestaurantId(@PathVariable Integer restID, @RequestBody CreateMenuItemRequestDto createMenuItemRequestDto) throws Exception {
+
+        return ResponseEntity.ok(service.addMenuItem(restID, createMenuItemRequestDto));
     }
 
-    // Method 3: Created Endpoint for adding the menu items to a particular restaurant by restaurant ID
-    @GetMapping("/menu/{restID}")
+    // Method 3: Endpoint for getting the menu items of a particular restaurant by restaurant ID
+    @GetMapping("/{restID}")
     public  List<MenuItems> getAllMenuItemsByRestaurantID(@PathVariable Integer restID) throws Exception {
-        try {
             return service.getAllMenuByRestaurantID(restID);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
 }

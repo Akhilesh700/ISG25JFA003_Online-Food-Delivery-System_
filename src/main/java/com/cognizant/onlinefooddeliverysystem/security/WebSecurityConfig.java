@@ -1,21 +1,23 @@
 package com.cognizant.onlinefooddeliverysystem.security;
 
-import jakarta.servlet.Filter;
-import lombok.AllArgsConstructor;
+import com.cognizant.onlinefooddeliverysystem.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.web.context.request.RequestContextListener;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -23,16 +25,28 @@ import org.springframework.web.context.request.RequestContextListener;
 public class WebSecurityConfig {
     @Value("${api.version.path}")
     private String apiVersionPath;
+
+    private final JWTFilter jwtFilter;
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+//    @Bean
+//    public JWTFilter jwtFilter(AuthUtil authUtil, UserRepository userRepository) {
+//        return new JWTFilter(authUtil, userRepository);
+//    }
+
+
     @Bean
     public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
+
+//    @Bean
+//    public ModelMapper modelMapper(){
+//        return new ModelMapper();
+//    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -40,14 +54,14 @@ public class WebSecurityConfig {
                 .csrf(csrfConfig -> csrfConfig.disable())
                 .authorizeHttpRequests(auth -> auth
                         // Permit all requests to your authentication endpoints
-                        .requestMatchers(apiVersionPath + "/**").permitAll()
-//                        .requestMatchers(apiVersionPath + "/auth/**").permitAll()
-                        // Require authentication for all other requests
+                        .requestMatchers(apiVersionPath + "/auth/**").permitAll()
+//                      // Require authentication for all other requests
 //                                .requestMatchers(apiVersionPath + "/customer/**").hasAuthority("ROLE_CUSTOMER")
 //                                .requestMatchers(apiVersionPath + "/restaurant/**").hasAuthority("ROLE_RESTAURANT")
 //                                .requestMatchers(apiVersionPath + "/admin/**").hasAuthority("ROLE_ADMIN")
-//                                .anyRequest().authenticated()
+                                .anyRequest().authenticated()
                 )
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 // Configuring stateless session management
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

@@ -1,6 +1,7 @@
 package com.cognizant.onlinefooddeliverysystem.security;
 
 import com.cognizant.onlinefooddeliverysystem.model.User;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,5 +32,15 @@ public class AuthUtil {
                 //Passing the secret Key
                 .signWith(getSecretKey())
                 .compact();
+    }
+
+    public String getUsernameFromToken(String token) {
+        Claims claims = Jwts
+                .parser()
+                .verifyWith(getSecretKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+        return claims.getSubject();
     }
 }

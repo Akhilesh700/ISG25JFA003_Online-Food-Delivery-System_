@@ -29,10 +29,14 @@ public class MenuItems {
     @Column(name = "isAvailable", nullable = false)
     private Boolean isAvailable;
 
-    @Column(name = "isVegiterian", nullable = false)
-    private Boolean isVegiterian;
+    @Column(name = "isVegetarian", nullable = false)
+    private Boolean isVegetarian;
 
-    private enum size{
+    @Enumerated(EnumType.STRING)
+    @Column(name = "Size", nullable = false)
+    private MenuItemSize size;
+
+    public enum MenuItemSize{
         small, medium, large, extraLarge
     }
 
