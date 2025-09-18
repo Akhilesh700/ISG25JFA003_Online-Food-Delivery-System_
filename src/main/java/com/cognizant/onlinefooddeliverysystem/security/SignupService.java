@@ -17,6 +17,7 @@ import com.cognizant.onlinefooddeliverysystem.repository.RestaurantRepository;
 import com.cognizant.onlinefooddeliverysystem.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -28,13 +29,13 @@ public class SignupService {
     private final CustomerRepository customerRepository;
     private final RestaurantRepository restaurantRepository;
     private final DeliveryAgentDao deliveryAgentDao;
-
+    private final PasswordEncoder passwordEncoder;
     public User createUser(String email, String password, User.UserRole role){
         User user = userRepository.findUserByEmail(email).orElse(null);
         if(user != null) throw new UserAlreadyExistsException("User already exists with user ID : "+ user.getUserId());
         user = userRepository.save(User.builder()
                 .email(email)
-                .password(password)
+                .password(passwordEncoder.encode(password))
                 .role(role)
                 .build()
         );
