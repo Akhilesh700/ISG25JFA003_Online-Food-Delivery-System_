@@ -1,7 +1,9 @@
 package com.cognizant.onlinefooddeliverysystem.exception.menu;
 
-public class RestaurantNotFoundException extends RuntimeException {
-  public RestaurantNotFoundException(String message) {
-    super(message);
-  }
+import com.cognizant.onlinefooddeliverysystem.exception.OnlineFoodDeliveryAppException;
+
+public class RestaurantNotFoundException extends OnlineFoodDeliveryAppException {
+    public RestaurantNotFoundException(String message) {
+        super(message);
+    }
 }
