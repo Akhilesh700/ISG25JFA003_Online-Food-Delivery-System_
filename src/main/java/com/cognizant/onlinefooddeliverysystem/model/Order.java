@@ -2,7 +2,9 @@ package com.cognizant.onlinefooddeliverysystem.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
@@ -14,6 +16,8 @@ import java.util.Set;
 @Entity
 // "Order" is a reserved keyword in SQL, so we must quote it.
 @Table(name = "`Order`")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Order {
 
     @Id
@@ -43,7 +47,7 @@ public class Order {
     private Restaurant restaurant;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "StatusID")
+    @JoinColumn(name = "Status")
     @JsonBackReference
     private Status status;
 
