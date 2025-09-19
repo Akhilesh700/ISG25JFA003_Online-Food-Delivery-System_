@@ -1,6 +1,7 @@
 package com.cognizant.onlinefooddeliverysystem.service;
 
 import com.cognizant.onlinefooddeliverysystem.dto.cart.CartRequestDto;
+import com.cognizant.onlinefooddeliverysystem.dto.cart.CartResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.cart.OrderItemDto;
 import com.cognizant.onlinefooddeliverysystem.exception.CartNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.exception.CustomerNotFoundException;
@@ -29,7 +30,6 @@ public class CartServiceImp implements CartService {
 
     CartItemRepository cartItemRepository;
     CartRepository cartRepository;
-    CustomerRepository customerRepository;
     MenuRepository menuRepository;
 
 
@@ -40,7 +40,9 @@ public class CartServiceImp implements CartService {
 
         result = menuItems.stream()
                 .map(item -> {
+
                     Long menuItemId = item.getMenuItemId();
+                    System.out.println(menuItemId);
                     Integer quantity = item.getQuantity();
                     MenuItems menuItem = menuRepository.findMenuItemsByItemId(menuItemId)
                             .orElseThrow(() -> new MenuItemNotFoundException("Menu item for Id: " + menuItemId + " not found"));
@@ -58,19 +60,16 @@ public class CartServiceImp implements CartService {
                 })
                 .toList();
 
-        return Pair.of(result, totalPrice[0]);
+        return Pair.of(result,totalPrice[0]);
     }
 
 
     @Override
     @Transactional
-    public Long addToCart(Integer customerId,CartRequestDto request){
-
-
+    public CartResponseDto addToCart(Integer customerId, CartRequestDto request){
         List<OrderItemDto> menuItems = Optional.ofNullable(request.getOrderItems())
                 .filter(list -> !list.isEmpty())
                 .orElseThrow(() -> new EmptyCartException("no menu items found."));
-
 
 
         Cart cart = cartRepository.findCartByCustId(customerId)
@@ -78,17 +77,22 @@ public class CartServiceImp implements CartService {
 
 
         Pair<List<CartItem>, Float> pair = cartItemHelper(menuItems, cart);
+
         List<CartItem> cartItems = pair.getLeft();
-        Float totalPrice = pair.getRight();
+        Float price = pair.getRight();
 
         cart.setCartItems(cartItems);
         cart.setNote(request.getNote());
-        cart.setTotalPrice(totalPrice);
-
+        cart.setTotalPrice(price);
 
         cartItemRepository.saveAll(cartItems);
-        cartRepository.save(cart);
 
-        return cart.getId();
+        return new CartResponseDto(cart.getId());
     }
+
+    public Cart getCartByCustomerId(Integer customerId) {
+        return cartRepository.findCartByCustId(customerId)
+                .orElseThrow(() -> new CartNotFoundException("No cart found against customer id: " + customerId ));
+    }
+
 }

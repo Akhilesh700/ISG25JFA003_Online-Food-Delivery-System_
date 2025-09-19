@@ -1,5 +1,6 @@
 package com.cognizant.onlinefooddeliverysystem.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -51,9 +52,11 @@ public class Restaurant {
 
     @JsonManagedReference("restaurant-menu")
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonBackReference
     private Set<MenuItems> menuItems;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonBackReference
     private Set<Order> orders;
 
     // Getters and Setters are now handled by Lombok

@@ -1,10 +1,14 @@
 package com.cognizant.onlinefooddeliverysystem.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,11 +23,13 @@ public class CartItem {
 
     //Relationship mapping
     @JoinColumn(name = "menu_item_id")
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     private MenuItems menuItems;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cart_id") // This will be the foreign key column in the CartItem table
+    @JoinColumn(name = "cart_id")
+    @JsonBackReference// This will be the foreign key column in the CartItem table
     private Cart cart;
 
 }

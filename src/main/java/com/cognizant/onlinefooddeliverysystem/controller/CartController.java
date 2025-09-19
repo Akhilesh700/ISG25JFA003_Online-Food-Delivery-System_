@@ -2,6 +2,8 @@ package com.cognizant.onlinefooddeliverysystem.controller;
 
 
 import com.cognizant.onlinefooddeliverysystem.dto.cart.CartRequestDto;
+import com.cognizant.onlinefooddeliverysystem.dto.cart.CartResponseDto;
+import com.cognizant.onlinefooddeliverysystem.model.Cart;
 import com.cognizant.onlinefooddeliverysystem.service.CartServiceImp;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,9 +20,15 @@ public class CartController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<Long> addToCart(@RequestHeader("customerId") Integer customerId, @RequestBody CartRequestDto request) {
-        Long cartId = cartService.addToCart(customerId, request);
+    public ResponseEntity<CartResponseDto> addToCart(@RequestHeader("customerId") Integer customerId, @RequestBody CartRequestDto request) {
+        CartResponseDto cartId= cartService.addToCart(customerId, request);
         return new ResponseEntity<>(cartId, HttpStatus.OK);
+    }
+
+    @GetMapping("/get-cart-by-customer/{customerId}")
+    public ResponseEntity<Cart> getCartByCustomerId(@PathVariable("customerId") Integer customerId ) {
+        Cart cart = cartService.getCartByCustomerId(customerId);
+        return new ResponseEntity<>(cart, HttpStatus.OK);
     }
 
 
