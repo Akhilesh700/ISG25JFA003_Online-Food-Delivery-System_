@@ -15,15 +15,12 @@ public class Status {
     @Column(name = "StatusID")
     private Integer statusId;
 
-    @Column(name = "StatusName", length = 50)
-    private String statusName;
-
     @Enumerated(EnumType.STRING)
-    @Column(name = "EntityType")
-    private EntityType entityType;
+    @Column(name = "StatusType")
+    private StatusType statusType;
 
-    public enum EntityType {
-        Order, Payment, Delivery
+    public enum StatusType {
+        PLACED, NOT_ACCEPTED, PREPARING, OUT_FOR_DELIVERY, DELIVERED
     }
 
     // Getters and Setters are now handled by Lombok
