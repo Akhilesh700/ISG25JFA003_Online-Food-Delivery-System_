@@ -1,9 +1,10 @@
 package com.cognizant.onlinefooddeliverysystem.service;
 
 import com.cognizant.onlinefooddeliverysystem.dto.cart.CartRequestDto;
+import com.cognizant.onlinefooddeliverysystem.dto.cart.CartResponseDto;
 
 public interface CartService {
 
-    public Long addToCart(Integer customerId ,CartRequestDto request);
+    public CartResponseDto addToCart(Integer customerId , CartRequestDto request);
 
 }

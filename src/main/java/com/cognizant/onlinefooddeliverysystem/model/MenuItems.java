@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @Entity
@@ -52,5 +53,9 @@ public class MenuItems {
     @JoinColumn(name = "RestID", nullable = false)
     @JsonBackReference()
     private Restaurant restaurant;
+
+    @OneToMany(mappedBy = "menuItems",fetch = FetchType.LAZY)
+    @JsonBackReference()
+    private List<CartItem> cartItems;
 
 }

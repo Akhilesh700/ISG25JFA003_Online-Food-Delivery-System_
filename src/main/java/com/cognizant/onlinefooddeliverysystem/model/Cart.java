@@ -1,5 +1,6 @@
 package com.cognizant.onlinefooddeliverysystem.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Cleanup;
 import lombok.Data;
@@ -24,9 +25,11 @@ public class Cart {
     //Relationship mapping
     @JoinColumn(name = "CustID", nullable = false)
     @OneToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     private Customer customer;
 
     @OneToMany(mappedBy = "cart", fetch = FetchType.LAZY)
+    @JsonBackReference
     private List<CartItem> cartItems;
 
 }

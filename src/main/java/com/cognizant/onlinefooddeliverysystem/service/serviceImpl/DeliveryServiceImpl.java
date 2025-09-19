@@ -1,9 +1,10 @@
-package com.cognizant.onlinefooddeliverysystem.service;
+package com.cognizant.onlinefooddeliverysystem.service.serviceImpl;
 
 
 import com.cognizant.onlinefooddeliverysystem.dto.OrderResponseDTO;
 import com.cognizant.onlinefooddeliverysystem.exception.InvalidRequestException;
 import com.cognizant.onlinefooddeliverysystem.exception.ResourceNotFoundException;
+import com.cognizant.onlinefooddeliverysystem.exception.StatusNotChangedException;
 import com.cognizant.onlinefooddeliverysystem.model.Delivery;
 import com.cognizant.onlinefooddeliverysystem.model.DeliveryAgent;
 import com.cognizant.onlinefooddeliverysystem.repository.DeliveryDao;
@@ -27,10 +28,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class DeliveryService {
+public class DeliveryServiceImpl {
 
     // Defining Logger
-    private static final Logger logger = LoggerFactory.getLogger(DeliveryService.class);
+    private static final Logger logger = LoggerFactory.getLogger(DeliveryServiceImpl.class);
 
 
     // Defining constants for magic numbers
@@ -44,7 +45,7 @@ public class DeliveryService {
     ModelMapper modelMapper;
 
     @Autowired
-    public DeliveryService(OrderRepository orderRepository, DeliveryDao deliveryDao, DeliveryAgentDao deliveryAgentDao, ModelMapper modelMapper){
+    public DeliveryServiceImpl(OrderRepository orderRepository, DeliveryDao deliveryDao, DeliveryAgentDao deliveryAgentDao, ModelMapper modelMapper){
         this.orderRepository = orderRepository;
         this.deliveryDao = deliveryDao;
         this.deliveryAgentDao = deliveryAgentDao;
@@ -140,21 +141,20 @@ public class DeliveryService {
     }
 
     @Transactional
-    public ResponseEntity<Boolean> updateOrderStatus(Integer orderId, Integer statusId) {
+    public ResponseEntity<Boolean> updateOrderStatus(Integer orderId, Integer statusId) throws StatusNotChangedException {
 
         logger.info("Updating status for order ID: {} to status ID: {}", orderId, statusId);
 
         boolean flag = false;
-        try{
-            int numberOfRowsAffected = orderRepository.updateOrderStatus(orderId, statusId);
-            if(numberOfRowsAffected == 0) {
-                throw  new Exception("Status Not Changed");
-            }else {
-                flag = true;
-            }
-        } catch (Exception e) {
-            System.out.println("Error while updating order " + e.getMessage());
+
+        int numberOfRowsAffected = orderRepository.updateOrderStatus(orderId, statusId);
+
+        if(numberOfRowsAffected == 0) {
+              throw new StatusNotChangedException("Status Not Changed");
+        }else {
+            flag = true;
         }
+
 
         return new ResponseEntity<>(flag, HttpStatus.OK);
     }
