@@ -1,5 +1,6 @@
 package com.cognizant.onlinefooddeliverysystem.security;
 
+import com.cognizant.onlinefooddeliverysystem.exception.login.NoUsersFoundWithUsername;
 import com.cognizant.onlinefooddeliverysystem.model.User;
 import com.cognizant.onlinefooddeliverysystem.repository.UserRepository;
 import jakarta.servlet.FilterChain;
@@ -31,8 +32,6 @@ public class JWTFilter extends OncePerRequestFilter {
 //      Getting header containing JWT Token
         final String requestTokenHeader = request.getHeader("Authorization");
 //      Checking if the token header is null or invalid
-
-        try {
             if(requestTokenHeader == null || !requestTokenHeader.startsWith("Bearer ")){
                 filterChain.doFilter(request, response);
                 return;
@@ -46,7 +45,7 @@ public class JWTFilter extends OncePerRequestFilter {
             if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
     //           Fetching the user with the username from DAO
                 User user = userRepository.findUserByEmail(username).orElseThrow(
-                        () -> new UsernameNotFoundException("User not found with username : " + username)
+                        () -> new NoUsersFoundWithUsername("User not found with username : " + username)
                 );
     //            Creating the authentication token by user, credentials and user's authorities
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
@@ -55,9 +54,6 @@ public class JWTFilter extends OncePerRequestFilter {
     //            Moving to next filter
 
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         filterChain.doFilter(request, response);
     }
 }
