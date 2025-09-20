@@ -1,7 +1,7 @@
 package com.cognizant.onlinefooddeliverysystem.repository;
 
 
-import com.cognizant.onlinefooddeliverysystem.model.CartItems;
+import com.cognizant.onlinefooddeliverysystem.model.CartItem;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -12,9 +12,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CartItemRepository extends JpaRepository<CartItems, Integer> {
+public interface CartItemRepository extends JpaRepository<CartItem, Integer> {
 //    Method for returning cart items against a particular cart id
-    List<CartItems> findByCartId(int cartId);
+    List<CartItem> findByCartId(int cartId);
 
     @Modifying
     @Transactional
