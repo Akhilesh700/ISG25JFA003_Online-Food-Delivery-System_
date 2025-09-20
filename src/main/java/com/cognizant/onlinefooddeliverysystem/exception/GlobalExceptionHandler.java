@@ -3,6 +3,7 @@ package com.cognizant.onlinefooddeliverysystem.exception;
 import com.cognizant.onlinefooddeliverysystem.dto.error.ErrorResponse;
 import com.cognizant.onlinefooddeliverysystem.exception.login.NoUsersFoundWithUsername;
 import com.cognizant.onlinefooddeliverysystem.exception.login.WrongCredentialsException;
+import com.cognizant.onlinefooddeliverysystem.exception.order.CartItemNotFoundWithCartIdException;
 import com.cognizant.onlinefooddeliverysystem.exception.signup.UserAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
     @ExceptionHandler(NoUsersFoundWithUsername.class)
-        public ResponseEntity<ErrorResponse> handleNoUsersFoundWithUsername(UserAlreadyExistsException ex) {
+        public ResponseEntity<ErrorResponse> handleNoUsersFoundWithUsername(NoUsersFoundWithUsername ex) {
             ErrorResponse errorResponse = new ErrorResponse(
                     HttpStatus.CONFLICT.value(),
                     "User not found",
@@ -42,6 +43,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(CartItemNotFoundWithCartIdException.class)
+    public ResponseEntity<ErrorResponse> handleCartItemNotFoundException(CartItemNotFoundWithCartIdException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                "Not found",
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(OnlineFoodDeliveryAppException.class)
     public ResponseEntity<ErrorResponse> handleOnlineFoodDeliveryAppException(OnlineFoodDeliveryAppException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
@@ -52,13 +63,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
-//        ErrorResponse errorResponse = new ErrorResponse(
-//                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-//                "An unexpected error occurred",
-//                ex.getMessage()
-//        );
-//        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "An unexpected error occurred",
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
