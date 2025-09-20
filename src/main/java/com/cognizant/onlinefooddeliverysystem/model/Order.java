@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -28,10 +29,12 @@ public class Order {
     @Column(name = "SpecialReq", columnDefinition = "TEXT")
     private String specialReq;
 
-    @Column(name = "OrderTime")
+//    Ordertime will be created automatically and it is not mutable
+    @Column(name = "OrderTime", updatable = false, nullable = false)
+    @CreationTimestamp
     private LocalDateTime orderTime;
 
-    @Column(name = "TotalAmount", precision = 10, scale = 2)
+    @Column(name = "TotalAmount", precision = 10, scale = 2, nullable = false)
     private BigDecimal totalAmount;
 
     // --- Relationships ---
@@ -51,10 +54,10 @@ public class Order {
     @JsonBackReference
     private Status status;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cart_id")
-    @JsonBackReference
-    private Cart cart;
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "cart_id")
+//    @JsonBackReference
+//    private Cart cart;
 
 
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
