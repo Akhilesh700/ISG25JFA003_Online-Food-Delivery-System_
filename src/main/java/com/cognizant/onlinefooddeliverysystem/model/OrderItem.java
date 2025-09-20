@@ -2,18 +2,17 @@ package com.cognizant.onlinefooddeliverysystem.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
-public class CartItem {
+public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cart_item_id")
-    private long cartItemId;
+    @Column(name = "orderItemId")
+    private long orderItemId;
 
     @Column(name = "quantity")
     private int quantity;
@@ -28,8 +27,7 @@ public class CartItem {
     private MenuItems menuItems;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cart_id")
+    @JoinColumn(name = "orderId")
     @JsonBackReference// This will be the foreign key column in the CartItem table
-    private Cart cart;
-
+    private Order order;
 }
