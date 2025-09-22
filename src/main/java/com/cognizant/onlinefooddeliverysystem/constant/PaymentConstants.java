@@ -2,8 +2,8 @@ package com.cognizant.onlinefooddeliverysystem.constant;
 
 
 import com.cognizant.onlinefooddeliverysystem.exception.InsufficientFundsException;
-import com.cognizant.onlinefooddeliverysystem.exception.InvalidPaymentTypeException;
-import com.cognizant.onlinefooddeliverysystem.exception.InvalidPaymentTypePinException;
+import com.cognizant.onlinefooddeliverysystem.exception.payment.InvalidPaymentTypeException;
+import com.cognizant.onlinefooddeliverysystem.exception.payment.InvalidPaymentTypePinException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
