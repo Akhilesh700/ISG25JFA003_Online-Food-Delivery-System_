@@ -1,13 +1,17 @@
 package com.cognizant.onlinefooddeliverysystem.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "Status")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Status {
 
     @Id
@@ -20,7 +24,7 @@ public class Status {
     private StatusType statusType;
 
     public enum StatusType {
-        PLACED, NOT_ACCEPTED, PREPARING, OUT_FOR_DELIVERY, DELIVERED
+        PLACED, FAILED, NOT_ACCEPTED, PREPARING, OUT_FOR_DELIVERY, DELIVERED
     }
 
     // Getters and Setters are now handled by Lombok

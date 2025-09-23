@@ -2,7 +2,9 @@ package com.cognizant.onlinefooddeliverysystem.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -11,6 +13,8 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "Delivery")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Delivery {
 
     @Id
