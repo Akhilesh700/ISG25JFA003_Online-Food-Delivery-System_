@@ -3,20 +3,14 @@ package com.cognizant.onlinefooddeliverysystem.service;
 import com.cognizant.onlinefooddeliverysystem.dto.cart.CartRequestDto;
 import com.cognizant.onlinefooddeliverysystem.dto.cart.CartResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.cart.OrderItemDto;
-import com.cognizant.onlinefooddeliverysystem.exception.CartNotFoundException;
-import com.cognizant.onlinefooddeliverysystem.exception.CustomerNotFoundException;
-import com.cognizant.onlinefooddeliverysystem.exception.EmptyCartException;
-import com.cognizant.onlinefooddeliverysystem.exception.MenuItemNotFoundException;
-import com.cognizant.onlinefooddeliverysystem.model.Cart;
-import com.cognizant.onlinefooddeliverysystem.model.CartItem;
-import com.cognizant.onlinefooddeliverysystem.model.Customer;
-import com.cognizant.onlinefooddeliverysystem.model.MenuItems;
-import com.cognizant.onlinefooddeliverysystem.repository.CartItemRepository;
-import com.cognizant.onlinefooddeliverysystem.repository.CartRepository;
-import com.cognizant.onlinefooddeliverysystem.repository.CustomerRepository;
-import com.cognizant.onlinefooddeliverysystem.repository.MenuRepository;
+import com.cognizant.onlinefooddeliverysystem.exception.*;
+import com.cognizant.onlinefooddeliverysystem.model.*;
+import com.cognizant.onlinefooddeliverysystem.repository.*;
 import lombok.AllArgsConstructor;
 import org.modelmapper.internal.Pair;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +25,9 @@ public class CartServiceImp implements CartService {
     CartItemRepository cartItemRepository;
     CartRepository cartRepository;
     MenuRepository menuRepository;
+    private final CustomerRepository customerRepository;
+    private final UserRepository userRepository;
+    private final GetVerifiedUser getVerifiedUser;
 
 
     private Pair<List<CartItem>, Float> cartItemHelper(List<OrderItemDto> menuItems, Cart cart) {
@@ -66,11 +63,14 @@ public class CartServiceImp implements CartService {
 
     @Override
     @Transactional
-    public CartResponseDto addToCart(Integer customerId, CartRequestDto request){
+    public CartResponseDto addToCart(Integer customerIdd, CartRequestDto request){
         List<OrderItemDto> menuItems = Optional.ofNullable(request.getOrderItems())
                 .filter(list -> !list.isEmpty())
                 .orElseThrow(() -> new EmptyCartException("no menu items found."));
 
+        User user = getVerifiedUser.getVerifiedUser();
+        Customer customer = customerRepository.findByUser_UserId(user.getUserId());
+        int customerId = customer.getCustId();
 
         Cart cart = cartRepository.findCartByCustId(customerId)
                 .orElseThrow(() -> new CartNotFoundException("No cart found against customer id: " + customerId ));
@@ -93,6 +93,13 @@ public class CartServiceImp implements CartService {
     public Cart getCartByCustomerId(Integer customerId) {
         return cartRepository.findCartByCustId(customerId)
                 .orElseThrow(() -> new CartNotFoundException("No cart found against customer id: " + customerId ));
+    }
+
+    public Cart getCartByVerifiedUser(){
+        User user = getVerifiedUser.getVerifiedUser();
+        Customer customer = customerRepository.findByUser_UserId(user.getUserId());
+        int customerId = customer.getCustId();
+        return getCartByCustomerId(customerId);
     }
 
 }
