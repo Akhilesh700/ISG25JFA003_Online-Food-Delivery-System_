@@ -1,6 +1,7 @@
 package com.cognizant.onlinefooddeliverysystem.security;
 
 import com.cognizant.onlinefooddeliverysystem.exception.login.NoUsersFoundWithUsername;
+import com.cognizant.onlinefooddeliverysystem.exception.order.UserHasNoRoleException;
 import com.cognizant.onlinefooddeliverysystem.model.User;
 import com.cognizant.onlinefooddeliverysystem.repository.UserRepository;
 import jakarta.servlet.FilterChain;
@@ -51,9 +52,9 @@ public class JWTFilter extends OncePerRequestFilter {
 //        Checking if the username exists and Authentication of SecurityContextHolder is not set
         if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
                 if (role == null) {
-                    logger.warn("JWT for user" +  user.getUserId() + "has an invalid role claim.");
+                    logger.warn("User " +  user.getUserId() + " has an invalid role");
                     filterChain.doFilter(request, response);
-                    return; // Stop processing and reject the token
+                    throw new UserHasNoRoleException("User " +  user.getUserId() + " has an invalid role");
                 }
 
 //               Creating a list of authorities from the role string
