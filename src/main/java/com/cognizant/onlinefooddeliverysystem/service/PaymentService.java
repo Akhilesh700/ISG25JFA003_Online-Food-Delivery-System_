@@ -6,7 +6,7 @@ import com.cognizant.onlinefooddeliverysystem.dto.payment.PaymentCallbackDTO;
 import com.cognizant.onlinefooddeliverysystem.dto.payment.PaymentRequestDTO;
 import com.cognizant.onlinefooddeliverysystem.dto.payment.PaymentResponseDTO;
 import com.cognizant.onlinefooddeliverysystem.dto.payment.PaymentStatusDTO;
-import com.cognizant.onlinefooddeliverysystem.exception.PaymentException;
+import com.cognizant.onlinefooddeliverysystem.exception.payment.PaymentException;
 import com.cognizant.onlinefooddeliverysystem.model.Order;
 import com.cognizant.onlinefooddeliverysystem.model.Payment;
 import com.cognizant.onlinefooddeliverysystem.repository.OrderRepository;

@@ -4,7 +4,6 @@ import com.cognizant.onlinefooddeliverysystem.dto.error.ErrorResponse;
 import com.cognizant.onlinefooddeliverysystem.exception.login.NoUsersFoundWithUsername;
 import com.cognizant.onlinefooddeliverysystem.exception.login.WrongCredentialsException;
 import com.cognizant.onlinefooddeliverysystem.exception.order.CartItemNotFoundWithCartIdException;
-import com.cognizant.onlinefooddeliverysystem.exception.order.UserHasNoRoleException;
 import com.cognizant.onlinefooddeliverysystem.exception.signup.UserAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -76,6 +75,37 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 "Not found",
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    // Payment Exceptions
+    @ExceptionHandler(PaymentException.class)
+    public ResponseEntity<ErrorResponse> handlePaymentException(PaymentException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "Bad Request",
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(InvalidPaymentTypePinException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidPaymentTypePinException(InvalidPaymentTypePinException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.NOT_ACCEPTABLE.value(),
+                "Incorrect PIN",
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(InvalidPaymentTypeException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidPaymentTypeException(InvalidPaymentTypeException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.NOT_ACCEPTABLE.value(),
+                "Incorrect Credentials",
                 ex.getMessage()
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
