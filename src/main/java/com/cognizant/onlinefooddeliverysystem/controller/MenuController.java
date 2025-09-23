@@ -40,4 +40,8 @@ MenuController {
             return service.getAllMenuByRestaurantID(restID);
     }
 
+//    TODO: To Implement menu update api
+
+//    TODO: To implement like query for dynamic searching of menu and along with typing of user
+
 }
