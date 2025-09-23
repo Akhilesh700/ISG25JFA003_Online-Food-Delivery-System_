@@ -10,6 +10,7 @@ import com.cognizant.onlinefooddeliverysystem.dto.restaurant.RestaurantSignupReq
 import com.cognizant.onlinefooddeliverysystem.dto.restaurant.RestaurantSignupResponseDto;
 import com.cognizant.onlinefooddeliverysystem.security.LoginService;
 import com.cognizant.onlinefooddeliverysystem.security.SignupService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,8 +28,7 @@ public class AuthController {
 
 
     @PostMapping("login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto){
-        System.out.println("In login");
+    public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto loginRequestDto){
         return ResponseEntity.ok(loginService.login(loginRequestDto));
     }
 /// ///////////////////////////////////////////////////////////////////////////////
@@ -36,18 +36,17 @@ public class AuthController {
 ///////////////////////////////////////////////////////////////////////////////////
 
     @PostMapping("/customer/sign-up")
-    public ResponseEntity<CustomerSignUpResponseDto> customerSignUp(@RequestBody CustomerSignUpRequestDto customerSignUpRequestDto){
-        System.out.println("Inside signup");
+    public ResponseEntity<CustomerSignUpResponseDto> customerSignUp(@Valid @RequestBody CustomerSignUpRequestDto customerSignUpRequestDto){
         return ResponseEntity.ok(signupService.customerSignUp(customerSignUpRequestDto));
     }
 
     @PostMapping("/restaurant/sign-up")
-    public ResponseEntity<RestaurantSignupResponseDto> restaurantSignUp(@RequestBody RestaurantSignupRequestDto restaurantSignupRequestDto){
+    public ResponseEntity<RestaurantSignupResponseDto> restaurantSignUp(@Valid @RequestBody RestaurantSignupRequestDto restaurantSignupRequestDto){
         return ResponseEntity.ok(signupService.restaurantSignUp(restaurantSignupRequestDto));
     }
 
     @PostMapping("/delivery-agent/sign-up")
-    public ResponseEntity<DeliveryAgentSignUpResponseDto> deliveryAgentSignUp(@RequestBody DeliveryAgentSignUpRequestDto deliveryAgentSignUpRequestDto){
+    public ResponseEntity<DeliveryAgentSignUpResponseDto> deliveryAgentSignUp(@Valid @RequestBody DeliveryAgentSignUpRequestDto deliveryAgentSignUpRequestDto){
         return ResponseEntity.ok(signupService.deliveryAgentSignUp(deliveryAgentSignUpRequestDto));
     }
 
