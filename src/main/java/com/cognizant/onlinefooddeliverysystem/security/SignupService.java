@@ -7,14 +7,8 @@ import com.cognizant.onlinefooddeliverysystem.dto.deliveryagent.DeliveryAgentSig
 import com.cognizant.onlinefooddeliverysystem.dto.restaurant.RestaurantSignupRequestDto;
 import com.cognizant.onlinefooddeliverysystem.dto.restaurant.RestaurantSignupResponseDto;
 import com.cognizant.onlinefooddeliverysystem.exception.signup.UserAlreadyExistsException;
-import com.cognizant.onlinefooddeliverysystem.model.Customer;
-import com.cognizant.onlinefooddeliverysystem.model.DeliveryAgent;
-import com.cognizant.onlinefooddeliverysystem.model.Restaurant;
-import com.cognizant.onlinefooddeliverysystem.model.User;
-import com.cognizant.onlinefooddeliverysystem.repository.CustomerRepository;
-import com.cognizant.onlinefooddeliverysystem.repository.DeliveryAgentDao;
-import com.cognizant.onlinefooddeliverysystem.repository.RestaurantRepository;
-import com.cognizant.onlinefooddeliverysystem.repository.UserRepository;
+import com.cognizant.onlinefooddeliverysystem.model.*;
+import com.cognizant.onlinefooddeliverysystem.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,6 +24,7 @@ public class SignupService {
     private final RestaurantRepository restaurantRepository;
     private final DeliveryAgentDao deliveryAgentDao;
     private final PasswordEncoder passwordEncoder;
+    private final CartRepository cartRepository;
     public User createUser(String email, String password, User.UserRole role){
         User user = userRepository.findUserByEmail(email).orElse(null);
         if(user != null) throw new UserAlreadyExistsException("User already exists with user ID : "+ user.getUserId());
@@ -55,6 +50,11 @@ public class SignupService {
                 .user(user)
                 .build()
         );
+//        Parallelly creating a cart for a user
+//        Customer can have only one cart at a time because customers get confused while ordering if they have more than one cart.
+        Cart cart = new Cart();
+        cart.setCustomer(customer);
+        Cart savedCart = cartRepository.save(cart);
 
         return new CustomerSignUpResponseDto(
                 user.getEmail(),
@@ -62,7 +62,8 @@ public class SignupService {
                 customer.getDob(),
                 user.getUserId(),
                 customer.getPhone(),
-                customer.getName()
+                customer.getName(),
+                savedCart.getId()
         );
     }
 
