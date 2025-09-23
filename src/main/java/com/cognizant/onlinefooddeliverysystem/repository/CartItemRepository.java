@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 public interface CartItemRepository extends JpaRepository<CartItem, Integer> {
 //    Method for returning cart items against a particular cart id
-    List<CartItem> findByCartId(int cartId);
+    List<CartItem> findByCartId(Long cartId);
 
     @Modifying
     @Transactional
