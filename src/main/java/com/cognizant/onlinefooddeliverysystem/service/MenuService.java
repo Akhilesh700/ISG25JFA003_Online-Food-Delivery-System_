@@ -28,17 +28,12 @@ public class MenuService {
     public List<MenuItems> getAllMenu(){
         return menuRepository.findAll();
     }
-
+//  TODO: Write DTO's for each of the response
     public List<MenuItems> getAllMenuByRestaurantID(int restId) throws Exception{
-        List<MenuItems> menuItemsList = null;
-        try{
-            menuItemsList = menuRepository.findByRestaurant_RestId(restId);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        List<MenuItems> menuItemsList = menuRepository.findByRestaurant_RestId(restId);
         return menuItemsList;
     }
-
+// TODO: Dynamic URL for menu searching
     public CreateMenuItemResponseDto addMenuItem(int restID, CreateMenuItemRequestDto createMenuItemRequestDto) throws Exception {
             Restaurant restaurant = restaurantRepository.findById(restID).orElseThrow(
                     () -> new RestaurantNotFoundException( "Restaurant not found with id: " + restID)
@@ -56,6 +51,8 @@ public class MenuService {
                 restaurant.getName()
         );
     }
+
+    // TODO: Dynamic URL for Restaurant searching
 
 
 }
