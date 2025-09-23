@@ -8,14 +8,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("${api.version.path}/orders")
+@RequestMapping("${api.version.path}/customer/orders")
 @RequiredArgsConstructor
 public class OrderController {
 
     private final OrderService orderService;
 
-    @PostMapping("/place/{cartItemId}")
-    public ResponseEntity<PlaceOrderResponseDto> placeOrder(@PathVariable Long cartItemId, @RequestBody PlaceOrderRequestDto request) {
-        return new ResponseEntity<>(orderService.placeOrderByCartId(cartItemId, request), HttpStatus.CREATED);
+    @PostMapping("/place")
+    public ResponseEntity<PlaceOrderResponseDto> placeOrder(@RequestBody PlaceOrderRequestDto request) {
+        return new ResponseEntity<>(orderService.placeOrderByCartId(request), HttpStatus.CREATED);
     }
 }

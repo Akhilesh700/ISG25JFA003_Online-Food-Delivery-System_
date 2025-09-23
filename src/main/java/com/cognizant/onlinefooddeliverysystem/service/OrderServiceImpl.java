@@ -1,5 +1,6 @@
 package com.cognizant.onlinefooddeliverysystem.service;
 
+import com.cognizant.onlinefooddeliverysystem.dto.order.GetOrderHistoryResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.order.PlaceOrderRequestDto;
 import com.cognizant.onlinefooddeliverysystem.dto.order.PlaceOrderResponseDto;
 import com.cognizant.onlinefooddeliverysystem.exception.ResourceNotFoundException;
@@ -7,6 +8,8 @@ import com.cognizant.onlinefooddeliverysystem.exception.order.CartItemNotFoundWi
 import com.cognizant.onlinefooddeliverysystem.model.*;
 import com.cognizant.onlinefooddeliverysystem.repository.*;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +25,9 @@ public class OrderServiceImpl implements OrderService {
     private final StatusRepository statusRepository;
     private final CartItemRepository cartItemRepository;
     private final OrderItemRepository orderItemRepository;
+    private final CustomerRepository customerRepository;
+    private final UserRepository userRepository;
+    private final GetVerifiedUser getVerifiedUser;
 
     private Order createOrder(Cart cart, List<CartItem> cartItems, Status placedStatus, PlaceOrderRequestDto request){
         Order newOrder = new Order();
@@ -46,14 +52,16 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public PlaceOrderResponseDto placeOrderByCartId(Long cartId, PlaceOrderRequestDto request) {
+    public PlaceOrderResponseDto placeOrderByCartId(PlaceOrderRequestDto request) {
 
-            Cart cart = cartRepository.findById(cartId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Cart not found with ID: " + cartId));
+            User user = getVerifiedUser.getVerifiedUser();
+            Customer customer = customerRepository.findByUser_UserId(user.getUserId());
+            Cart cart = cartRepository.findCartByCustId(customer.getCustId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Cart not found for User id : " + user.getUserId() + " with customer id : " + customer.getCustId()));
 
-            List<CartItem> cartItems = cartItemRepository.findByCartId(cartId.intValue());
+            List<CartItem> cartItems = cartItemRepository.findByCartId(cart.getId());
             if(cartItems.isEmpty()){
-                throw new CartItemNotFoundWithCartIdException("Empty cart with id : " + cartId);
+                throw new CartItemNotFoundWithCartIdException("Empty cart with id : " + cart.getId());
             }
             Status placedStatus = statusRepository.findById(1)
                     .orElseThrow(() -> new ResourceNotFoundException("Status 'PLACED' not found."));
@@ -61,18 +69,24 @@ public class OrderServiceImpl implements OrderService {
 //            Step 1 : Creation of order
             Order placedOrder = createOrder(cart, cartItems, placedStatus, request);
 //            Step 2 : Mapping list of cartItems
+
             List<OrderItem> orderedItems = mapOrderItems(cartItems, placedOrder);
 //          Step 3 : Saving the list of ordered items to database
             orderItemRepository.saveAll(orderedItems);
 
 //            Step 4 : Deleting cart items after the order is placed
-            int rowsAffected = cartItemRepository.deleteCartItemsByCartId(cartId);
+            int rowsAffected = cartItemRepository.deleteCartItemsByCartId(cart.getId());
 //            Step 5 : Making the cart empty || Resetting the cart
-            cartRepository.resetCartById(cartId);
+            cartRepository.resetCartById(cart.getId());
 
         return new PlaceOrderResponseDto(
                 rowsAffected,
                 "Order placed successfully!"
         );
+    }
+
+    @Override
+    public GetOrderHistoryResponseDto getOrderHistoryByCustomerId(int customerId) {
+        return null;
     }
 }
