@@ -5,15 +5,17 @@ import com.cognizant.onlinefooddeliverysystem.dto.OrderResponseDTO;
 import com.cognizant.onlinefooddeliverysystem.exception.InvalidRequestException;
 import com.cognizant.onlinefooddeliverysystem.exception.ResourceNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.exception.StatusNotChangedException;
-import com.cognizant.onlinefooddeliverysystem.model.Delivery;
-import com.cognizant.onlinefooddeliverysystem.model.DeliveryAgent;
+import com.cognizant.onlinefooddeliverysystem.model.*;
 import com.cognizant.onlinefooddeliverysystem.repository.DeliveryDao;
+import com.cognizant.onlinefooddeliverysystem.repository.UserRepository;
+import com.cognizant.onlinefooddeliverysystem.service.DeliveryService;
+import com.cognizant.onlinefooddeliverysystem.service.GetVerifiedUser;
 import com.cognizant.onlinefooddeliverysystem.util.OrderIdDeliveryId;
-import com.cognizant.onlinefooddeliverysystem.model.Order;
 import com.cognizant.onlinefooddeliverysystem.dto.order.UnassignedOrderDTO;
 import com.cognizant.onlinefooddeliverysystem.repository.DeliveryAgentDao;
 import com.cognizant.onlinefooddeliverysystem.repository.OrderRepository;
 import com.cognizant.onlinefooddeliverysystem.util.ProbabilisticQuantum;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +30,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class DeliveryServiceImpl {
+@RequiredArgsConstructor
+public class DeliveryServiceImpl implements DeliveryService {
 
     // Defining Logger
     private static final Logger logger = LoggerFactory.getLogger(DeliveryServiceImpl.class);
@@ -39,21 +42,14 @@ public class DeliveryServiceImpl {
     private static final int ESTIMATED_TRAVEL_TIME_MINUTES = 12;
 
 
-    OrderRepository orderRepository;
-    DeliveryDao deliveryDao;
-    DeliveryAgentDao deliveryAgentDao;
-    ModelMapper modelMapper;
-
-    @Autowired
-    public DeliveryServiceImpl(OrderRepository orderRepository, DeliveryDao deliveryDao, DeliveryAgentDao deliveryAgentDao, ModelMapper modelMapper){
-        this.orderRepository = orderRepository;
-        this.deliveryDao = deliveryDao;
-        this.deliveryAgentDao = deliveryAgentDao;
-        this.modelMapper = modelMapper;
-    }
+    private final OrderRepository orderRepository;
+    private final DeliveryDao deliveryDao;
+    private final DeliveryAgentDao deliveryAgentDao;
+    private final ModelMapper modelMapper;
+    private final GetVerifiedUser getVerifiedUser;
 
 
-
+    @Override
     public ResponseEntity<List<UnassignedOrderDTO>> getUnassignedOrders(Integer restaurantId) {
 
         logger.info("Fetching unassigned orders for restaurant ID: {}", restaurantId);
@@ -61,13 +57,14 @@ public class DeliveryServiceImpl {
         return new ResponseEntity<>(unassignedOrderDTOS, HttpStatus.OK);
     }
 
+    @Override
     public ResponseEntity<List<DeliveryAgent>> getAllAvailableDeliveryAgent() {
         logger.info("Fetching all available delivery agents");
         List<DeliveryAgent> deliveryAgents = deliveryAgentDao.findAllAvailableDeliveryAgent();
         return new ResponseEntity<>(deliveryAgents, HttpStatus.OK);
     }
 
-
+    @Override
     public ResponseEntity<OrderResponseDTO> findOrderById(Integer orderId)  {
 
         logger.info("Fetching order with ID: {}", orderId);
@@ -77,7 +74,7 @@ public class DeliveryServiceImpl {
         return new ResponseEntity<>(orderResponseDTO,HttpStatus.OK);
     }
 
-    @Transactional
+    @Override
     public ResponseEntity<Boolean> assignOrder(Integer id) {
 
         logger.info("Attempting to assign order with ID: {}", id);
@@ -140,7 +137,7 @@ public class DeliveryServiceImpl {
         return new ResponseEntity<>(flag, HttpStatus.ACCEPTED);
     }
 
-    @Transactional
+    @Override
     public ResponseEntity<Boolean> updateOrderStatus(Integer orderId, Integer statusId) throws StatusNotChangedException {
 
         logger.info("Updating status for order ID: {} to status ID: {}", orderId, statusId);
@@ -159,6 +156,7 @@ public class DeliveryServiceImpl {
         return new ResponseEntity<>(flag, HttpStatus.OK);
     }
 
+    @Override
     public ResponseEntity<String> findDeliveryStatus(Integer orderId) {
         logger.info("Fetching delivery status for order ID: {}", orderId);
 
@@ -166,5 +164,21 @@ public class DeliveryServiceImpl {
                 .orElseThrow(() -> new ResourceNotFoundException("No status for order id: " + orderId ));
         return new ResponseEntity<>(status, HttpStatus.OK);
     }
+
+    @Override
+    public ResponseEntity<String> updateDeliveryAgentStatus(DeliveryAgent.Status status){
+        if(status == null) {
+            throw new StatusNotChangedException("Invalid Status.");
+        }
+        User user = getVerifiedUser.getVerifiedUser();
+        DeliveryAgent deliveryAgent = deliveryAgentDao.findDeliveryAgentByUserId(user.getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("Delivery Agent with User ID: " + user.getUserId() + " Not Found."));
+
+
+        deliveryAgent.setStatus(status);
+
+        return new ResponseEntity<>("Status Has Been Changed to  " + status.toString() + ".", HttpStatus.OK);
+    }
+
 
 }
