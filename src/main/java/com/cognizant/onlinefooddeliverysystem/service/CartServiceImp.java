@@ -4,19 +4,16 @@ import com.cognizant.onlinefooddeliverysystem.dto.cart.CartRequestDto;
 import com.cognizant.onlinefooddeliverysystem.dto.cart.CartResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.cart.OrderItemDto;
 import com.cognizant.onlinefooddeliverysystem.exception.*;
+import com.cognizant.onlinefooddeliverysystem.exception.payment.CartNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.model.*;
 import com.cognizant.onlinefooddeliverysystem.repository.*;
 import lombok.AllArgsConstructor;
 import org.modelmapper.internal.Pair;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @AllArgsConstructor
