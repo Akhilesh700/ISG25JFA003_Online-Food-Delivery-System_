@@ -3,6 +3,7 @@ package com.cognizant.onlinefooddeliverysystem.exception;
 import com.cognizant.onlinefooddeliverysystem.dto.error.ErrorResponse;
 import com.cognizant.onlinefooddeliverysystem.exception.login.NoUsersFoundWithUsername;
 import com.cognizant.onlinefooddeliverysystem.exception.login.WrongCredentialsException;
+import com.cognizant.onlinefooddeliverysystem.exception.menu.RestaurantNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.exception.order.CartItemNotFoundWithCartIdException;
 import com.cognizant.onlinefooddeliverysystem.exception.order.UserHasNoRoleException;
 import com.cognizant.onlinefooddeliverysystem.exception.payment.InvalidPaymentTypeException;
@@ -89,6 +90,26 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CartItemNotFoundWithCartIdException.class)
     public ResponseEntity<ErrorResponse> handleCartItemNotFoundException(CartItemNotFoundWithCartIdException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                "Not found",
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(MenuItemNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleMenuItemNotFoundException(MenuItemNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                "Not found",
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(RestaurantNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleRestaurantNotFoundException(RestaurantNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 "Not found",
