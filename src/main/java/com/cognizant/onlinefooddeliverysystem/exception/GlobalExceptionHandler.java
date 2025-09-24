@@ -11,6 +11,7 @@ import com.cognizant.onlinefooddeliverysystem.exception.payment.PaymentException
 import com.cognizant.onlinefooddeliverysystem.exception.signup.UserAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -33,6 +34,18 @@ public class GlobalExceptionHandler {
             errors.put(fieldName, errorMessage);
         });
         return errors;
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED) // Sets the HTTP response status to 401
+    public Map<String, String> handleBadCredentialsException(BadCredentialsException ex) {
+
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("status", "401");
+        errorResponse.put("error", "Unauthorized");
+        errorResponse.put("message", "Invalid username or password");
+
+        return errorResponse;
     }
 
     @ExceptionHandler(UserAlreadyExistsException.class)
