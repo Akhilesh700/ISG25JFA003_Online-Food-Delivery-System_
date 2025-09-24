@@ -3,6 +3,7 @@ package com.cognizant.onlinefooddeliverysystem.repository;
 import com.cognizant.onlinefooddeliverysystem.model.DeliveryAgent;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +22,6 @@ public interface DeliveryAgentDao extends JpaRepository<DeliveryAgent, Integer> 
 
     Optional<DeliveryAgent> findDeliveryAgentByAgentId(Integer id);
 
-
-    Optional<DeliveryAgent> findDeliveryAgentByUserId(Integer id);
+    @Query("SELECT da FROM DeliveryAgent da WHERE da.user.userId = :userId")
+    Optional<DeliveryAgent> findDeliveryAgentByUserId(@Param("userId") Integer id);
 }

@@ -44,6 +44,7 @@ public class WebSecurityConfig {
 //                      // Require authentication for all other requests
                         .requestMatchers(apiVersionPath + "/customer/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_CUSTOMER")
                         .requestMatchers(apiVersionPath + "/restaurant/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_RESTAURANT")
+                        .requestMatchers(apiVersionPath + "/delivery-agent/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_DELIVERY_AGENT")
                         .requestMatchers(apiVersionPath + "/admin/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
