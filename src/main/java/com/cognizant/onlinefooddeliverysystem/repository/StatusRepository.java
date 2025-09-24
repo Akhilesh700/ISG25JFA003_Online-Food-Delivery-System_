@@ -12,4 +12,6 @@ public interface StatusRepository extends JpaRepository<Status, Integer> {
 
 //    @Query(value = "SELECT * FROM STATUS", nativeQuery = true)
     Optional<Status> findByStatusType(String placed);
+
+    Optional<Status> findByStatusId(int statusId);
 }

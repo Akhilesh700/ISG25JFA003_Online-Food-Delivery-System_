@@ -1,5 +1,6 @@
 package com.cognizant.onlinefooddeliverysystem.dto.payment;
 
+import com.cognizant.onlinefooddeliverysystem.model.Payment;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,7 +22,7 @@ public class PaymentResponseDTO {
 
     private String paymentType;
 
-    private String paymentStatus;
+    private Payment.Status paymentStatus;
 
 
 }
