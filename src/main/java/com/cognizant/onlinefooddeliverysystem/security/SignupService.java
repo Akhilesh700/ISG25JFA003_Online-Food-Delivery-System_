@@ -1,5 +1,7 @@
 package com.cognizant.onlinefooddeliverysystem.security;
 
+import com.cognizant.onlinefooddeliverysystem.dto.admin.AdminSignUpRequestDto;
+import com.cognizant.onlinefooddeliverysystem.dto.admin.AdminSignUpResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.customer.CustomerSignUpRequestDto;
 import com.cognizant.onlinefooddeliverysystem.dto.customer.CustomerSignUpResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.deliveryagent.DeliveryAgentSignUpRequestDto;
@@ -10,6 +12,7 @@ import com.cognizant.onlinefooddeliverysystem.exception.signup.UserAlreadyExists
 import com.cognizant.onlinefooddeliverysystem.model.*;
 import com.cognizant.onlinefooddeliverysystem.repository.*;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,7 @@ public class SignupService {
     private final DeliveryAgentDao deliveryAgentDao;
     private final PasswordEncoder passwordEncoder;
     private final CartRepository cartRepository;
+
     public User createUser(String email, String password, User.UserRole role){
         User user = userRepository.findUserByEmail(email).orElse(null);
         if(user != null) throw new UserAlreadyExistsException("User already exists with user ID : "+ user.getUserId());
@@ -112,5 +116,13 @@ public class SignupService {
                 agent.getStatus()
         );
 
+    }
+
+    public AdminSignUpResponseDto adminSignUp(@Valid AdminSignUpRequestDto requestDto) {
+        User user = createUser(requestDto.getEmail(), requestDto.getPassword(), User.UserRole.valueOf("ROLE_ADMIN"));
+        return new AdminSignUpResponseDto(
+                user.getUserId(),
+                user.getCreatedAt()
+        );
     }
 }
