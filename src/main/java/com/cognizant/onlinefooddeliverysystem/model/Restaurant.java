@@ -47,10 +47,10 @@ public class Restaurant {
     // --- Relationships ---
 
     @OneToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     @JoinColumn(name = "UserID",nullable = false, referencedColumnName = "UserID", unique = true)
     private User user;
 
-    @JsonManagedReference("restaurant-menu")
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference
     private Set<MenuItems> menuItems;
