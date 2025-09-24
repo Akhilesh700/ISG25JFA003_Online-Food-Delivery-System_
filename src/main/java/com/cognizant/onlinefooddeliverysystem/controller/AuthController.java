@@ -1,5 +1,7 @@
 package com.cognizant.onlinefooddeliverysystem.controller;
 
+import com.cognizant.onlinefooddeliverysystem.dto.admin.AdminSignUpRequestDto;
+import com.cognizant.onlinefooddeliverysystem.dto.admin.AdminSignUpResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.customer.CustomerSignUpResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.deliveryagent.DeliveryAgentSignUpRequestDto;
 import com.cognizant.onlinefooddeliverysystem.dto.deliveryagent.DeliveryAgentSignUpResponseDto;
@@ -26,7 +28,6 @@ public class AuthController {
     private final LoginService loginService;
     private final SignupService signupService;
 
-
     @PostMapping("login")
     public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto loginRequestDto){
         return ResponseEntity.ok(loginService.login(loginRequestDto));
@@ -48,6 +49,11 @@ public class AuthController {
     @PostMapping("/delivery-agent/sign-up")
     public ResponseEntity<DeliveryAgentSignUpResponseDto> deliveryAgentSignUp(@Valid @RequestBody DeliveryAgentSignUpRequestDto deliveryAgentSignUpRequestDto){
         return ResponseEntity.ok(signupService.deliveryAgentSignUp(deliveryAgentSignUpRequestDto));
+    }
+
+    @PostMapping("/admin/sign-up")
+    public ResponseEntity<AdminSignUpResponseDto> deliveryAgentSignUp(@Valid @RequestBody AdminSignUpRequestDto requestDto){
+        return ResponseEntity.ok(signupService.adminSignUp(requestDto));
     }
 
 }
