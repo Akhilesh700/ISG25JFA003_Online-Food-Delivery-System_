@@ -1,4 +1,4 @@
-package com.cognizant.onlinefooddeliverysystem.service;
+package com.cognizant.onlinefooddeliverysystem.util;
 
 import com.cognizant.onlinefooddeliverysystem.exception.ResourceNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.model.User;
