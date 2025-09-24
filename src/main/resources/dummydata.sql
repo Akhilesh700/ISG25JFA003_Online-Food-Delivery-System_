@@ -116,8 +116,8 @@ INSERT INTO Users (Email, Password, Role) VALUES
 ('agent17@example.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGzUaH9wohPWMoA9pY/o9oPyTwMYEW', 'ROLE_DELIVERY_AGENT'),
 ('agent18@example.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGzUaH9wohPWMoA9pY/o9oPyTwMYEW', 'ROLE_DELIVERY_AGENT'),
 ('agent19@example.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGzUaH9wohPWMoA9pY/o9oPyTwMYEW', 'ROLE_DELIVERY_AGENT'),
-('agent20@example.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGzUaH9wohPWMoA9pY/o9oPyTwMYEW', 'ROLE_DELIVERY_AGENT');
-
+('agent20@example.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGzUaH9wohPWMoA9pY/o9oPyTwMYEW', 'ROLE_DELIVERY_AGENT'),
+('customer@adminn.com', 'abcd', 'ROLE_CUSTOMER');
 
 -- =======================================================================================
 -- SECTION 2: CUSTOMERS (50 TOTAL)
@@ -173,10 +173,64 @@ INSERT INTO Customer (Name, Phone, Address, DOB, Preferred_Payment, UserID) VALU
 ('Prakash Jadhav', '9456789018', '737 Kothrud, Pune', '1998-12-07', 'Credit Card', 47),
 ('Sanjay Vaghela', '9456789019', '838 Bodakdev, Ahmedabad', '1986-07-31', 'Net Banking', 48),
 ('Deepak Shekhawat', '9456789020', '939 Raja Park, Jaipur', '2001-10-26', 'UPI', 49),
-('Amitabh Saxena', '9456789021', '1313 Aminabad, Lucknow', '1995-04-01', 'Cash on Delivery', 50);
-
+('Amitabh Saxena', '9456789021', '1313 Aminabad, Lucknow', '1995-04-01', 'Cash on Delivery', 50),
+('Ashish Ranjan Singh', '6203899163', 'Dhanoura, Chapra, Bihar', '2003-07-13', 'UPI', 51 );
 -- =======================================================================================
--- SECTION 3: RESTAURANTS (30 TOTAL)
+-- SECTION 3: Carts (50 TOTAL)
+-- Linked to CustomerIDs 1-50
+-- =======================================================================================
+INSERT INTO cart(custid) VALUES (1);
+INSERT INTO cart(custid) VALUES (2);
+INSERT INTO cart(custid) VALUES (3);
+INSERT INTO cart(custid) VALUES (4);
+INSERT INTO cart(custid) VALUES (5);
+INSERT INTO cart(custid) VALUES (6);
+INSERT INTO cart(custid) VALUES (7);
+INSERT INTO cart(custid) VALUES (8);
+INSERT INTO cart(custid) VALUES (9);
+INSERT INTO cart(custid) VALUES (10);
+INSERT INTO cart(custid) VALUES (11);
+INSERT INTO cart(custid) VALUES (12);
+INSERT INTO cart(custid) VALUES (13);
+INSERT INTO cart(custid) VALUES (14);
+INSERT INTO cart(custid) VALUES (15);
+INSERT INTO cart(custid) VALUES (16);
+INSERT INTO cart(custid) VALUES (17);
+INSERT INTO cart(custid) VALUES (18);
+INSERT INTO cart(custid) VALUES (19);
+INSERT INTO cart(custid) VALUES (20);
+INSERT INTO cart(custid) VALUES (21);
+INSERT INTO cart(custid) VALUES (22);
+INSERT INTO cart(custid) VALUES (23);
+INSERT INTO cart(custid) VALUES (24);
+INSERT INTO cart(custid) VALUES (25);
+INSERT INTO cart(custid) VALUES (26);
+INSERT INTO cart(custid) VALUES (27);
+INSERT INTO cart(custid) VALUES (28);
+INSERT INTO cart(custid) VALUES (29);
+INSERT INTO cart(custid) VALUES (30);
+INSERT INTO cart(custid) VALUES (31);
+INSERT INTO cart(custid) VALUES (32);
+INSERT INTO cart(custid) VALUES (33);
+INSERT INTO cart(custid) VALUES (34);
+INSERT INTO cart(custid) VALUES (35);
+INSERT INTO cart(custid) VALUES (36);
+INSERT INTO cart(custid) VALUES (37);
+INSERT INTO cart(custid) VALUES (38);
+INSERT INTO cart(custid) VALUES (39);
+INSERT INTO cart(custid) VALUES (40);
+INSERT INTO cart(custid) VALUES (41);
+INSERT INTO cart(custid) VALUES (42);
+INSERT INTO cart(custid) VALUES (43);
+INSERT INTO cart(custid) VALUES (44);
+INSERT INTO cart(custid) VALUES (45);
+INSERT INTO cart(custid) VALUES (46);
+INSERT INTO cart(custid) VALUES (47);
+INSERT INTO cart(custid) VALUES (48);
+INSERT INTO cart(custid) VALUES (49);
+INSERT INTO cart(custid) VALUES (50);
+-- =======================================================================================
+-- SECTION 4: RESTAURANTS (30 TOTAL)
 -- Linked to UserIDs 51-80
 -- =======================================================================================
 INSERT INTO Restaurant (Name, img_Url, Address, Phone, Rating, Open_Time, Close_Time, UserID) VALUES
