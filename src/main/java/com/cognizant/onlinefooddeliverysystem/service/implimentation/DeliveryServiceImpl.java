@@ -1,4 +1,4 @@
-package com.cognizant.onlinefooddeliverysystem.service.serviceImpl;
+package com.cognizant.onlinefooddeliverysystem.service.implimentation;
 
 
 import com.cognizant.onlinefooddeliverysystem.dto.OrderResponseDTO;

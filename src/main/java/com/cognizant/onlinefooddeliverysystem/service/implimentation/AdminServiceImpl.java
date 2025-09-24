@@ -1,4 +1,4 @@
-package com.cognizant.onlinefooddeliverysystem.service.serviceImpl;
+package com.cognizant.onlinefooddeliverysystem.service.implimentation;
 
 import com.cognizant.onlinefooddeliverysystem.model.Customer;
 import com.cognizant.onlinefooddeliverysystem.model.DeliveryAgent;
@@ -24,22 +24,21 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public List<User> getAllUsers() {
-        
-        return List.of();
+        return userRepository.findAll();
     }
 
     @Override
     public List<Customer> getAllCustomers() {
-        return List.of();
+        return customerRepository.findAll();
     }
 
     @Override
     public List<DeliveryAgent> getAllDeliveryAgents() {
-        return List.of();
+        return deliveryAgentDao.findAll();
     }
 
     @Override
     public List<Restaurant> getAllRestaurants() {
-        return List.of();
+        return restaurantRepository.findAll();
     }
 }

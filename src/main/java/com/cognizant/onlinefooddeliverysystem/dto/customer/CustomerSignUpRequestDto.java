@@ -11,12 +11,11 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CustomerSignUpRequestDto {
-    // Corrected annotations for the email field
+
     @NotBlank(message = "Email cannot be blank")
     @Email(message = "Please provide a valid email address")
     private String email;
 
-    // Corrected annotations for the password field
     @NotBlank(message = "Password cannot be blank")
     @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
