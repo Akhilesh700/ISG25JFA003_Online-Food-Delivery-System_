@@ -21,4 +21,6 @@ public interface DeliveryAgentDao extends JpaRepository<DeliveryAgent, Integer> 
 
     Optional<DeliveryAgent> findDeliveryAgentByAgentId(Integer id);
 
+
+    Optional<DeliveryAgent> findDeliveryAgentByUserId(Integer id);
 }
