@@ -3,10 +3,13 @@ package com.cognizant.onlinefooddeliverysystem.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -61,6 +64,18 @@ public class User implements UserDetails {
     public enum UserRole {
         ROLE_CUSTOMER, ROLE_RESTAURANT, ROLE_DELIVERY_AGENT, ROLE_ADMIN
     }
+
+    // --- Timestamps ---
+    @Column(name = "last_login_at")
+    private LocalDateTime lastLoginAt;
+
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false, nullable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
 
     // Getters and Setters are now handled by Lombok
 }

@@ -7,9 +7,8 @@ import com.cognizant.onlinefooddeliverysystem.exception.ResourceNotFoundExceptio
 import com.cognizant.onlinefooddeliverysystem.exception.StatusNotChangedException;
 import com.cognizant.onlinefooddeliverysystem.model.*;
 import com.cognizant.onlinefooddeliverysystem.repository.DeliveryDao;
-import com.cognizant.onlinefooddeliverysystem.repository.UserRepository;
 import com.cognizant.onlinefooddeliverysystem.service.DeliveryService;
-import com.cognizant.onlinefooddeliverysystem.service.GetVerifiedUser;
+import com.cognizant.onlinefooddeliverysystem.util.GetVerifiedUser;
 import com.cognizant.onlinefooddeliverysystem.util.OrderIdDeliveryId;
 import com.cognizant.onlinefooddeliverysystem.dto.order.UnassignedOrderDTO;
 import com.cognizant.onlinefooddeliverysystem.repository.DeliveryAgentDao;
@@ -19,11 +18,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
