@@ -6,7 +6,7 @@ import com.cognizant.onlinefooddeliverysystem.dto.order.UnassignedOrderDTO;
 import com.cognizant.onlinefooddeliverysystem.model.DeliveryAgent;
 import com.cognizant.onlinefooddeliverysystem.repository.UserRepository;
 import com.cognizant.onlinefooddeliverysystem.security.AuthUtil;
-import com.cognizant.onlinefooddeliverysystem.service.serviceImpl.DeliveryServiceImpl;
+import com.cognizant.onlinefooddeliverysystem.service.implimentation.DeliveryServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

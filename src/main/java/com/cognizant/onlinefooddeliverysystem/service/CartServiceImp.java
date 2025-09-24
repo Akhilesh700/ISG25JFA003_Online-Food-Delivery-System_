@@ -7,6 +7,7 @@ import com.cognizant.onlinefooddeliverysystem.exception.*;
 import com.cognizant.onlinefooddeliverysystem.exception.payment.CartNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.model.*;
 import com.cognizant.onlinefooddeliverysystem.repository.*;
+import com.cognizant.onlinefooddeliverysystem.util.GetVerifiedUser;
 import lombok.AllArgsConstructor;
 import org.modelmapper.internal.Pair;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,6 @@ public class CartServiceImp implements CartService {
                 .map(item -> {
 
                     Long menuItemId = item.getMenuItemId();
-                    System.out.println(menuItemId);
                     Integer quantity = item.getQuantity();
                     MenuItems menuItem = menuRepository.findMenuItemsByItemId(menuItemId)
                             .orElseThrow(() -> new MenuItemNotFoundException("Menu item for Id: " + menuItemId + " not found"));
