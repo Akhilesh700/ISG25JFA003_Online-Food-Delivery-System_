@@ -44,10 +44,10 @@ public class RestaurantServiceImpl implements RestaurantService {
             throw new InvalidRequestException("This order is not from your restaurant");
         }
         else {
-            if (!action.equalsIgnoreCase("ACCEPT") && !action.equalsIgnoreCase("REJECT")){
-                throw new InvalidRequestException("Invalid action value it can either be `ACCEPT` or `REJECT`");
+            if (!action.equalsIgnoreCase("NOT_ACCEPTED") && !action.equalsIgnoreCase("PREPARING")){
+                throw new InvalidRequestException("Invalid action value it can either be `NOT_ACCEPTED` or `PREPARING`");
             }
-            toBeUpdatedStatus = statusRepository.findByStatusType(action.toUpperCase()).orElseThrow(() ->
+            toBeUpdatedStatus = statusRepository.findByStatusType(Status.StatusType.valueOf(action.toUpperCase())).orElseThrow(() ->
                 new ResourceNotFoundException(action.toUpperCase() + " status not found in Status Table")
             );
             order.setStatus(toBeUpdatedStatus);
