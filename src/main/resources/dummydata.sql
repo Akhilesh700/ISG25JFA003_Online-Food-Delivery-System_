@@ -308,6 +308,7 @@ INSERT INTO Delivery_Agent (Name, Phone, status, Identity_Proof_Type, Identity_P
 -- =======================================================================================
 INSERT INTO Status (Status_Type) VALUES
 ('PLACED'),
+('PENDING')
 ('PREPARING'),
 ('OUT_FOR_DELIVERY'),
 ('DELIVERED'),

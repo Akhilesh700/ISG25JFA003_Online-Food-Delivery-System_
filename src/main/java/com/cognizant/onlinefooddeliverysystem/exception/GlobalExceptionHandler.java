@@ -6,6 +6,7 @@ import com.cognizant.onlinefooddeliverysystem.exception.login.WrongCredentialsEx
 import com.cognizant.onlinefooddeliverysystem.exception.menu.RestaurantNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.exception.order.CartItemNotFoundWithCartIdException;
 import com.cognizant.onlinefooddeliverysystem.exception.order.UserHasNoRoleException;
+import com.cognizant.onlinefooddeliverysystem.exception.payment.CartNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.exception.payment.InvalidPaymentTypeException;
 import com.cognizant.onlinefooddeliverysystem.exception.payment.InvalidPaymentTypePinException;
 import com.cognizant.onlinefooddeliverysystem.exception.payment.PaymentException;
@@ -161,6 +162,27 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(EmptyCartException.class)
+    public ResponseEntity<ErrorResponse> handleEmptyCartException(EmptyCartException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "Cart not found",
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CartNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCartNotFoundException(CartNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                "Cart not found",
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
 
     @ExceptionHandler(ExpiredJwtException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)

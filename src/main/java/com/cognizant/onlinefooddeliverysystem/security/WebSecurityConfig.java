@@ -23,6 +23,12 @@ public class WebSecurityConfig {
     @Value("${api.version.path}")
     private String apiVersionPath;
 
+    private static final String[] SWAGGER_WHITELIST = {
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/swagger-ui.html"
+    };
+
     private final JWTFilter jwtFilter;
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -40,7 +46,7 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         // Permit all requests to your authentication endpoints
-                        .requestMatchers(apiVersionPath + "/auth/**").permitAll()
+                        .requestMatchers(apiVersionPath + "/auth/**", "/swagger-ui/**","/v3/api-docs/**","/swagger-ui.html").permitAll()
 //                      // Require authentication for all other requests
                         .requestMatchers(apiVersionPath + "/customer/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_CUSTOMER")
                         .requestMatchers(apiVersionPath + "/restaurant/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_RESTAURANT")

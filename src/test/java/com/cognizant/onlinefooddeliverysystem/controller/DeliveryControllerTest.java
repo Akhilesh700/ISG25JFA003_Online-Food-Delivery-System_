@@ -66,7 +66,7 @@ class DeliveryControllerTest {
                 .orderTime(Timestamp.from(Instant.now()))
                 .specialReq("No Onions")
                 .totalAmount(new BigDecimal("750.50"))
-                .statusType(Status.StatusType.PLACED)
+                .statusType(Status.StatusType.PLACED.toString())
                 .address("456 Oak Avenue")
                 .name("Jane Doe")
                 .phone("555-0102")

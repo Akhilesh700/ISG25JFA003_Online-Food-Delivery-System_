@@ -10,7 +10,7 @@ import com.cognizant.onlinefooddeliverysystem.model.Order;
 import com.cognizant.onlinefooddeliverysystem.model.Payment;
 import com.cognizant.onlinefooddeliverysystem.repository.OrderRepository;
 import com.cognizant.onlinefooddeliverysystem.repository.PaymentRepository;
-import com.cognizant.onlinefooddeliverysystem.service.PaymentService;
+import com.cognizant.onlinefooddeliverysystem.service.implimentation.PaymentServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ import java.util.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class PaymentServiceTest {
+public class PaymentServiceImplTest {
 
 
     @Mock
@@ -41,7 +41,7 @@ public class PaymentServiceTest {
     private ModelMapper modelMapper;
 
     @InjectMocks
-    private PaymentService paymentService;
+    private PaymentServiceImpl paymentServiceImpl;
 
     private Order order;
     private PaymentRequestDTO paymentRequestDTO;
@@ -82,7 +82,7 @@ public class PaymentServiceTest {
         when(modelMapper.map(savedPayment, PaymentResponseDTO.class)).thenReturn(expectedResponse);
 
         // Act
-        PaymentResponseDTO actualResponse = paymentService.initiatePayment(paymentRequestDTO);
+        PaymentResponseDTO actualResponse = paymentServiceImpl.initiatePayment(paymentRequestDTO);
 
         // Assert
         Assertions.assertNotNull(actualResponse);
@@ -110,7 +110,7 @@ public class PaymentServiceTest {
 
         // Act & Assert
         PaymentException exception = Assertions.assertThrows(PaymentException.class, () -> {
-            paymentService.initiatePayment(paymentRequestDTO);
+            paymentServiceImpl.initiatePayment(paymentRequestDTO);
         });
         Assertions.assertEquals("Order not Found with ID: 99", exception.getMessage());
         verifyNoInteractions(paymentRepository, modelMapper);
@@ -127,7 +127,7 @@ public class PaymentServiceTest {
 
         // Act & Assert
         PaymentException exception = Assertions.assertThrows(PaymentException.class, () -> {
-            paymentService.initiatePayment(paymentRequestDTO);
+            paymentServiceImpl.initiatePayment(paymentRequestDTO);
         });
         Assertions.assertEquals("Payment for order Id : 1 is already successful.", exception.getMessage());
     }
@@ -143,7 +143,7 @@ public class PaymentServiceTest {
 
         // Act & Assert
         PaymentException exception = Assertions.assertThrows(PaymentException.class, () -> {
-            paymentService.initiatePayment(paymentRequestDTO);
+            paymentServiceImpl.initiatePayment(paymentRequestDTO);
         });
         Assertions.assertEquals("Payment for order Id : 1 is already pending.", exception.getMessage());
     }
@@ -169,7 +169,7 @@ public class PaymentServiceTest {
             )).thenReturn(true);
 
             // Act
-            String transactionId = paymentService.processPaymentResponse(callback);
+            String transactionId = paymentServiceImpl.processPaymentResponse(callback);
 
             // Assert
             Assertions.assertNotNull(transactionId);
@@ -200,7 +200,7 @@ public class PaymentServiceTest {
             )).thenReturn(false);
 
             // Act
-            String transactionId = paymentService.processPaymentResponse(callback);
+            String transactionId = paymentServiceImpl.processPaymentResponse(callback);
 
             // Assert
             Assertions.assertNotNull(transactionId);
@@ -222,7 +222,7 @@ public class PaymentServiceTest {
 
         // Act & Assert
         PaymentException exception = Assertions.assertThrows(PaymentException.class, () -> {
-            paymentService.processPaymentResponse(callback);
+            paymentServiceImpl.processPaymentResponse(callback);
         });
         Assertions.assertEquals("Payment not found with ID: 999", exception.getMessage());
     }
@@ -249,7 +249,7 @@ public class PaymentServiceTest {
         when(paymentRepository.findAllByOrder_OrderId(orderId)).thenReturn(paymentList);
 
         // Act
-        List<PaymentStatusDTO> statusDTOs = paymentService.getPaymentStatus(orderId);
+        List<PaymentStatusDTO> statusDTOs = paymentServiceImpl.getPaymentStatus(orderId);
 
         // Assert
         Assertions.assertNotNull(statusDTOs);
@@ -272,7 +272,7 @@ public class PaymentServiceTest {
         when(paymentRepository.findAllByOrder_OrderId(orderId)).thenReturn(Collections.emptyList());
 
         // Act
-        List<PaymentStatusDTO> statusDTOs = paymentService.getPaymentStatus(orderId);
+        List<PaymentStatusDTO> statusDTOs = paymentServiceImpl.getPaymentStatus(orderId);
 
         // Assert
         Assertions.assertNotNull(statusDTOs);
