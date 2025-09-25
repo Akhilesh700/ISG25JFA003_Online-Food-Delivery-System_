@@ -95,11 +95,13 @@ public class OrderServiceImpl implements OrderService {
         List<Order> orders = orderRepository.findByCustomer_CustId(customer.getCustId());
         return orders.stream().map(order -> {
             List<OrderItem> orderedItems = orderItemRepository.findByOrder_OrderId(order.getOrderId());
+//           Getting list of menu items mapped with order item
+            List<MenuItems> menuItems = orderedItems.stream().map((orderItem ->
+                menuItemRepository.findById((int) orderItem.getMenuItems().getItemId()).orElseThrow(() ->
+                        new MenuItemNotFoundException("Menu Item is not found by Menu Item Id : " + orderItem.getMenuItems().getItemId())
+                )
+            )).toList();
 
-            List<MenuItems> menuItems = menuItemRepository.findByOrderItem_OrderId(orderedItems.getFirst().getOrderItemId());
-            if (menuItems.isEmpty()){
-                throw new MenuItemNotFoundException("Menu Items are not found by Order Item Id : " + orderedItems.getFirst().getOrderItemId());
-            }
             return new GetOrderHistoryResponseDto(
                     order.getOrderId(),
                     menuItems.getFirst().getRestaurant().getName(),
