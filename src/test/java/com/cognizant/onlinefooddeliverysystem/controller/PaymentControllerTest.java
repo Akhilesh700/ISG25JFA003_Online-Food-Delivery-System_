@@ -5,6 +5,7 @@ import com.cognizant.onlinefooddeliverysystem.dto.payment.PaymentRequestDTO;
 import com.cognizant.onlinefooddeliverysystem.dto.payment.PaymentResponseDTO;
 import com.cognizant.onlinefooddeliverysystem.dto.payment.PaymentStatusDTO;
 import com.cognizant.onlinefooddeliverysystem.exception.payment.PaymentException;
+import com.cognizant.onlinefooddeliverysystem.model.Payment;
 import com.cognizant.onlinefooddeliverysystem.repository.UserRepository;
 import com.cognizant.onlinefooddeliverysystem.security.AuthUtil;
 import com.cognizant.onlinefooddeliverysystem.service.PaymentService;
@@ -65,7 +66,7 @@ class PaymentControllerTest {
 
         paymentResponseDTO = new PaymentResponseDTO();
         paymentResponseDTO.setPaymentId(101);
-        paymentResponseDTO.setPaymentStatus("Pending");
+        paymentResponseDTO.setPaymentStatus(Payment.Status.Pending);
 
         paymentCallbackDTO = new PaymentCallbackDTO(101, "Credit Card", "1234-5678-9000", 1234, 100.0f);
     }
@@ -140,8 +141,8 @@ class PaymentControllerTest {
         // Arrange
         Integer orderId = 1;
         List<PaymentStatusDTO> statusList = List.of(
-                new PaymentStatusDTO(orderId, "Successful", "txn_123"),
-                new PaymentStatusDTO(orderId, "Failed", "txn_456")
+                new PaymentStatusDTO(orderId, Payment.Status.Successful, "txn_123"),
+                new PaymentStatusDTO(orderId, Payment.Status.Failed, "txn_456")
         );
         when(paymentService.getPaymentStatus(orderId)).thenReturn(statusList);
 
