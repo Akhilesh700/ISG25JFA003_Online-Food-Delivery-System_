@@ -65,7 +65,7 @@ public class OrderServiceImpl implements OrderService {
             if(cartItems.isEmpty()){
                 throw new CartItemNotFoundWithCartIdException("Empty cart with id : " + cart.getId());
             }
-            Status placedStatus = statusRepository.findById(1)
+            Status placedStatus = statusRepository.findByStatusType("PENDING")
                     .orElseThrow(() -> new ResourceNotFoundException("Status 'PLACED' not found."));
 
 //            Step 1 : Creation of order
