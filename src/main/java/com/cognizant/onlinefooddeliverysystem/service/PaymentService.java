@@ -6,11 +6,15 @@ import com.cognizant.onlinefooddeliverysystem.dto.payment.PaymentCallbackDTO;
 import com.cognizant.onlinefooddeliverysystem.dto.payment.PaymentRequestDTO;
 import com.cognizant.onlinefooddeliverysystem.dto.payment.PaymentResponseDTO;
 import com.cognizant.onlinefooddeliverysystem.dto.payment.PaymentStatusDTO;
+import com.cognizant.onlinefooddeliverysystem.exception.ResourceNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.exception.payment.PaymentException;
 import com.cognizant.onlinefooddeliverysystem.model.Order;
 import com.cognizant.onlinefooddeliverysystem.model.Payment;
+import com.cognizant.onlinefooddeliverysystem.model.Status;
 import com.cognizant.onlinefooddeliverysystem.repository.OrderRepository;
 import com.cognizant.onlinefooddeliverysystem.repository.PaymentRepository;
+import com.cognizant.onlinefooddeliverysystem.repository.StatusRepository;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,25 +26,13 @@ import java.util.Set;
 import java.util.UUID;
 
 @Service
-
+@RequiredArgsConstructor
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final OrderRepository orderRepository;
     private final ModelMapper modelMapper;
-
-    private static final String SUCCESSFINALSTRING = "Successful";
-    private static final String PENDINGFINALSTRING = "Pending";
-    private static final String FAILEDFINALSTRING = "Failed";
-
-    @Autowired
-    PaymentService(PaymentRepository paymentRepository, OrderRepository orderRepository, ModelMapper modelMapper ){
-        this.paymentRepository = paymentRepository;
-        this.orderRepository = orderRepository;
-        this.modelMapper = modelMapper;
-    }
-
-
+    private final StatusRepository statusRepository;
 
 
     @Transactional
@@ -53,10 +45,10 @@ public class PaymentService {
 
 
         PaymentResponseDTO response;
-        if (payments.stream().anyMatch(p -> p.getPaymentStatus().equalsIgnoreCase(SUCCESSFINALSTRING))) {
+        if (payments.stream().anyMatch(p -> p.getPaymentStatus() == Payment.Status.Successful )) {
             throw new PaymentException("Payment for order Id : " + order.getOrderId() + " is already successful.");
         }
-        else if (payments.stream().anyMatch(p -> p.getPaymentStatus().equalsIgnoreCase(PENDINGFINALSTRING))) {
+        else if (payments.stream().anyMatch(p -> p.getPaymentStatus() == Payment.Status.Pending)) {
             throw new PaymentException("Payment for order Id : " + order.getOrderId() + " is already pending.");
         }else {
             // Create new Payment Record
@@ -64,7 +56,7 @@ public class PaymentService {
             payment.setOrder(order);
             payment.setAmount(order.getTotalAmount());
             payment.setMethod(request.getPaymentMethod());
-            payment.setPaymentStatus(PENDINGFINALSTRING);
+            payment.setPaymentStatus(Payment.Status.Pending);
             payment.setPaymentType("Pre_Paid");
             payment.setTimestamp(LocalDateTime.now());
 
@@ -85,10 +77,17 @@ public class PaymentService {
         String transactionId = "txn_" + UUID.randomUUID();
 
         if(PaymentConstants.validatePayment(callback.getType(), callback.getIdentifier(), callback.getPin(),callback.getAmount())){
-            payment.setPaymentStatus(SUCCESSFINALSTRING);
+
+            payment.setPaymentStatus(Payment.Status.Successful);
             payment.setTransactionId(transactionId);
+
+            Order order = payment.getOrder();
+            Status status = statusRepository.findByStatusType("PLACED")
+                    .orElseThrow(() -> new ResourceNotFoundException("Not_Accepted Status Not Found"));
+            order.setStatus(status);
+
         }else {
-            payment.setPaymentStatus(FAILEDFINALSTRING);
+            payment.setPaymentStatus(Payment.Status.Failed);
             payment.setTransactionId(transactionId);
         }
 

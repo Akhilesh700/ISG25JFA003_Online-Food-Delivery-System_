@@ -17,15 +17,15 @@ import java.util.Optional;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Integer> {
 
-    @Query(value = "SELECT o.orderid, r.restid, o.order_time, o.special_req, o.total_amount, s.status_name, c.address, c.name, c.phone\n" +
+    @Query(value = "SELECT o.orderid, r.restid, o.order_time, o.special_req, o.total_amount, s.status_type, c.address, c.name, c.phone\n" +
             "FROM `order` o \n" +
             "JOIN status s \n" +
-            "ON o.statusid=s.statusid\n" +
+            "ON o.status=s.statusid\n" +
             "JOIN restaurant r\n" +
             "ON o.restid=r.restid\n" +
             "JOIN customer c\n" +
             "ON o.custid = c.custid\n" +
-            "WHERE (s.status_name = \"Preparing\" or s.status_name = \"Not_Accepted\") and r.restId = :id; ", nativeQuery = true)
+            "WHERE (s.status_type = \"PREPARING\" or s.status_type = \"NOT_ACCEPTED\") and r.restId = :id; ", nativeQuery = true)
     public List<UnassignedOrderDTO> findUnassignedOrders(Integer id);
 
 
@@ -41,7 +41,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     @Transactional
     @Modifying
     @Query(value = "Update `order`\n" +
-            "set statusid = :statusid\n" +
+            "set status = :statusid\n" +
             "where orderid = :orderid;", nativeQuery = true)
     int updateOrderStatus(@Param("orderid") Integer orderId, @Param("statusid") Integer statusId);
 

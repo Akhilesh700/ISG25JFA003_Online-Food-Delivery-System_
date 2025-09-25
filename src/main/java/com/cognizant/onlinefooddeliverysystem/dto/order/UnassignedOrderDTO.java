@@ -1,14 +1,14 @@
 package com.cognizant.onlinefooddeliverysystem.dto.order;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import com.cognizant.onlinefooddeliverysystem.model.Status;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @Builder
 public class UnassignedOrderDTO {
@@ -19,7 +19,7 @@ public class UnassignedOrderDTO {
     private Timestamp orderTime;
     private String specialReq;
     private BigDecimal totalAmount;
-    private String statusName;
+    private String statusType;
     private String address;
     private String name;
     private String phone;
