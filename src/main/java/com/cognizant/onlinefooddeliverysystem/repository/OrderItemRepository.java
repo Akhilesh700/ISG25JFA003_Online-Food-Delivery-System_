@@ -15,4 +15,5 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Integer> {
      */
     @Query("SELECT MAX(mi.prepTime) FROM OrderItem oi JOIN oi.menuItems mi WHERE oi.order.id = :orderId")
     Float findMaxPrepTimeByOrderId(@Param("orderId") Integer orderId);
+
 }
