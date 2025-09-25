@@ -39,7 +39,8 @@ public class Payment {
     private String paymentType;
 
     @Column(name = "payment_status")
-    private String paymentStatus;
+    @Enumerated(EnumType.STRING)
+    private Status paymentStatus;
 
     // --- Relationships ---
 
@@ -47,6 +48,10 @@ public class Payment {
     @JoinColumn(name = "OrderID", nullable = false)
     @JsonBackReference
     private Order order;
+
+    public enum Status {
+        Successful, Pending, Failed
+    }
 
 
 }

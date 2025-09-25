@@ -1,6 +1,7 @@
 package com.cognizant.onlinefooddeliverysystem.dto.payment;
 
 
+import com.cognizant.onlinefooddeliverysystem.model.Payment;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -9,6 +10,6 @@ import lombok.Data;
 public class PaymentStatusDTO {
 
     private Integer orderId;
-    private String paymentStatus;
+    private Payment.Status paymentStatus;
     private String transactionId;
 }

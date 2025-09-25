@@ -4,6 +4,7 @@ package com.cognizant.onlinefooddeliverysystem.controller;
 import com.cognizant.onlinefooddeliverysystem.dto.OrderResponseDTO;
 import com.cognizant.onlinefooddeliverysystem.dto.order.UnassignedOrderDTO;
 import com.cognizant.onlinefooddeliverysystem.model.DeliveryAgent;
+import com.cognizant.onlinefooddeliverysystem.model.Status;
 import com.cognizant.onlinefooddeliverysystem.repository.UserRepository;
 import com.cognizant.onlinefooddeliverysystem.security.AuthUtil;
 import com.cognizant.onlinefooddeliverysystem.service.implimentation.DeliveryServiceImpl;
@@ -65,7 +66,7 @@ class DeliveryControllerTest {
                 .orderTime(Timestamp.from(Instant.now()))
                 .specialReq("No Onions")
                 .totalAmount(new BigDecimal("750.50"))
-                .statusName("Pending")
+                .statusType(Status.StatusType.PLACED)
                 .address("456 Oak Avenue")
                 .name("Jane Doe")
                 .phone("555-0102")

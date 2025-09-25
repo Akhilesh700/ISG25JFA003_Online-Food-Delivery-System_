@@ -74,7 +74,7 @@ public class PaymentServiceTest {
         Payment savedPayment = new Payment();
         savedPayment.setPaymentId(101);
         savedPayment.setOrder(order);
-        savedPayment.setPaymentStatus("Pending");
+        savedPayment.setPaymentStatus(Payment.Status.Pending);
         when(paymentRepository.save(any(Payment.class))).thenReturn(savedPayment);
 
         PaymentResponseDTO expectedResponse = new PaymentResponseDTO();
@@ -121,7 +121,7 @@ public class PaymentServiceTest {
     void testInitiatePayment_ThrowsPaymentException_WhenPaymentAlreadySuccessful() {
         // Arrange
         Payment successfulPayment = new Payment();
-        successfulPayment.setPaymentStatus("Successful");
+        successfulPayment.setPaymentStatus(Payment.Status.Successful);
         order.getPayments().add(successfulPayment);
         when(orderRepository.findOrderByOrderId(1)).thenReturn(Optional.of(order));
 
@@ -137,7 +137,7 @@ public class PaymentServiceTest {
     void testInitiatePayment_ThrowsPaymentException_WhenPaymentAlreadyPending() {
         // Arrange
         Payment pendingPayment = new Payment();
-        pendingPayment.setPaymentStatus("Pending");
+        pendingPayment.setPaymentStatus(Payment.Status.Pending);
         order.getPayments().add(pendingPayment);
         when(orderRepository.findOrderByOrderId(1)).thenReturn(Optional.of(order));
 
@@ -157,7 +157,7 @@ public class PaymentServiceTest {
         // Arrange
         Payment pendingPayment = new Payment();
         pendingPayment.setPaymentId(101);
-        pendingPayment.setPaymentStatus("Pending");
+        pendingPayment.setPaymentStatus(Payment.Status.Pending);
         when(paymentRepository.findById(101)).thenReturn(Optional.of(pendingPayment));
 
         PaymentCallbackDTO callback = new PaymentCallbackDTO(101, "Credit Card", "1234-5678", 123, 100.0f);
@@ -189,7 +189,7 @@ public class PaymentServiceTest {
         // Arrange
         Payment pendingPayment = new Payment();
         pendingPayment.setPaymentId(101);
-        pendingPayment.setPaymentStatus("Pending");
+        pendingPayment.setPaymentStatus(Payment.Status.Pending);
         when(paymentRepository.findById(101)).thenReturn(Optional.of(pendingPayment));
 
         PaymentCallbackDTO callback = new PaymentCallbackDTO(101, "Debit Card", "invalid-card", 1000, 50.0f);
@@ -236,12 +236,12 @@ public class PaymentServiceTest {
         // Arrange
         Integer orderId = 1;
         Payment p1 = new Payment();
-        p1.setPaymentStatus("Successful");
+        p1.setPaymentStatus(Payment.Status.Successful);
         p1.setTransactionId("txn_123");
         p1.setOrder(order);
 
         Payment p2 = new Payment();
-        p2.setPaymentStatus("Failed");
+        p2.setPaymentStatus(Payment.Status.Failed);
         p2.setTransactionId("txn_456");
         p2.setOrder(order);
 
