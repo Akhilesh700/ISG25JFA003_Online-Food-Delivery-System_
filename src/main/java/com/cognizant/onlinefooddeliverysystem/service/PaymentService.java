@@ -82,7 +82,7 @@ public class PaymentService {
             payment.setTransactionId(transactionId);
 
             Order order = payment.getOrder();
-            Status status = statusRepository.findByStatusId(6)
+            Status status = statusRepository.findByStatusType("PLACED")
                     .orElseThrow(() -> new ResourceNotFoundException("Not_Accepted Status Not Found"));
             order.setStatus(status);
 
