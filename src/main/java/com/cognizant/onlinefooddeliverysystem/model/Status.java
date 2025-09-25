@@ -24,7 +24,7 @@ public class Status {
     private StatusType statusType;
 
     public enum StatusType {
-        PLACED, FAILED, NOT_ACCEPTED, PREPARING, OUT_FOR_DELIVERY, DELIVERED
+        PLACED, PENDING, FAILED, NOT_ACCEPTED, PREPARING, OUT_FOR_DELIVERY, DELIVERED
     }
 
     // Getters and Setters are now handled by Lombok
