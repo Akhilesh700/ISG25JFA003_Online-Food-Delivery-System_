@@ -15,8 +15,8 @@ public class RestaurantController {
     private final RestaurantService restaurantService;
 
 
-    @PutMapping("/{action}/{orderId}")
-    public ResponseEntity<AcceptRejectOrderResponseDto> acceptOrder(@PathVariable("orderId") int orderId, @PathVariable("action") String action){
+    @PutMapping("/update-status/{orderId}")
+    public ResponseEntity<AcceptRejectOrderResponseDto> acceptOrder(@PathVariable("orderId") int orderId, @RequestParam("action") String action){
         return new ResponseEntity<>(restaurantService.acceptOrder(orderId, action), HttpStatus.ACCEPTED);
     }
 }

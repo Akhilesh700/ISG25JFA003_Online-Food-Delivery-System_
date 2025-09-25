@@ -29,33 +29,40 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     @Transactional
     public AcceptRejectOrderResponseDto acceptOrder(int orderId, String action) {
-        User user = getVerifiedUser.getVerifiedUser();
-        Restaurant restaurant = restaurantRepository.findByUser_UserId(user.getUserId());
-
-        if (restaurant == null){
-            throw new RestaurantNotFoundException("Restaurant not found with user id : " + user.getUserId());
-        }
-
-        Order order = orderRepository.findOrderByOrderId(orderId).orElseThrow(() ->
-                new ResourceNotFoundException("Order not found with order id : " + orderId)
-        );
         Status toBeUpdatedStatus;
-        if(order.getRestaurant() != restaurant){
-            throw new InvalidRequestException("This order is not from your restaurant");
+        if (!action.equalsIgnoreCase("accept") && !action.equalsIgnoreCase("reject")){
+            throw new InvalidRequestException("Invalid action value it can either be `ACCEPT` or `REJECT`");
         }
         else {
-            if (!action.equalsIgnoreCase("NOT_ACCEPTED") && !action.equalsIgnoreCase("PREPARING")){
-                throw new InvalidRequestException("Invalid action value it can either be `NOT_ACCEPTED` or `PREPARING`");
+            String statusToUpdate = action.equalsIgnoreCase("accept") ? "PREPARING" : "NOT_ACCEPTED";
+            User user = getVerifiedUser.getVerifiedUser();
+            Restaurant restaurant = restaurantRepository.findByUser_UserId(user.getUserId());
+
+            if (restaurant == null) {
+                throw new RestaurantNotFoundException("Restaurant not found with user id : " + user.getUserId());
             }
-            toBeUpdatedStatus = statusRepository.findByStatusType(Status.StatusType.valueOf(action.toUpperCase())).orElseThrow(() ->
-                new ResourceNotFoundException(action.toUpperCase() + " status not found in Status Table")
+
+            Order order = orderRepository.findOrderByOrderId(orderId).orElseThrow(() ->
+                    new ResourceNotFoundException("Order not found with order id : " + orderId)
             );
-            order.setStatus(toBeUpdatedStatus);
+            if (order.getRestaurant() != restaurant) {
+                throw new InvalidRequestException("This order is not from your restaurant");
+            } else {
+                toBeUpdatedStatus = statusRepository.findByStatusType(Status.StatusType.valueOf(statusToUpdate.toUpperCase())).orElseThrow(() ->
+                        new ResourceNotFoundException(statusToUpdate.toUpperCase() + " status not found in Status Table")
+                );
+                if(!order.getStatus().getStatusType().toString().equalsIgnoreCase("PLACED")){
+                    throw new InvalidRequestException("This order is already in `" + order.getStatus().getStatusType() + "` state");
+                }
+                else {
+                    order.setStatus(toBeUpdatedStatus);
+                }
+            }
         }
 
         return new AcceptRejectOrderResponseDto(
                 toBeUpdatedStatus.getStatusType(),
-                "Order has been successfully " + toBeUpdatedStatus.getStatusType().toString() + "ed"
+                "Order has been successfully " + action + "ed"
         );
     }
 }
