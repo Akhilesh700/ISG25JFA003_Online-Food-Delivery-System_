@@ -8,7 +8,7 @@ import com.cognizant.onlinefooddeliverysystem.model.Cart;
 import com.cognizant.onlinefooddeliverysystem.model.Customer;
 import com.cognizant.onlinefooddeliverysystem.repository.UserRepository;
 import com.cognizant.onlinefooddeliverysystem.security.AuthUtil;
-import com.cognizant.onlinefooddeliverysystem.service.CartServiceImp;
+import com.cognizant.onlinefooddeliverysystem.service.implimentation.CartServiceImp;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

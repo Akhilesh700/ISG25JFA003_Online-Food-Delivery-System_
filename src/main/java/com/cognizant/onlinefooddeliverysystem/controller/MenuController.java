@@ -3,14 +3,11 @@ package com.cognizant.onlinefooddeliverysystem.controller;
 import com.cognizant.onlinefooddeliverysystem.dto.menuitem.CreateMenuItemRequestDto;
 import com.cognizant.onlinefooddeliverysystem.dto.menuitem.CreateMenuItemResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.menuitem.UpdateMenuItemRequestDto;
-import com.cognizant.onlinefooddeliverysystem.dto.menuitem.UpdateMenuItemResponseDto;
+import com.cognizant.onlinefooddeliverysystem.dto.UpdateEntityResponseDto;
 import com.cognizant.onlinefooddeliverysystem.model.MenuItems;
 import com.cognizant.onlinefooddeliverysystem.service.MenuService;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,7 +41,7 @@ MenuController {
 
 //    TODO: To Implement menu update api
     @PostMapping("/update-menu/{menuItemId}")
-    public ResponseEntity<UpdateMenuItemResponseDto> updateMenuItemByMenuItemId(@PathVariable Long menuItemId, @RequestBody UpdateMenuItemRequestDto requestDto){
+    public ResponseEntity<UpdateEntityResponseDto> updateMenuItemByMenuItemId(@PathVariable Long menuItemId, @RequestBody UpdateMenuItemRequestDto requestDto){
         return ResponseEntity.ok(service.updateMenuItemByMenuItemId(menuItemId, requestDto));
     }
 

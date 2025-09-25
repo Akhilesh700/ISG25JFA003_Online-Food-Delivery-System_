@@ -1,22 +1,37 @@
 package com.cognizant.onlinefooddeliverysystem.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 // TODO: Understand this file
 @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-    @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response,
-                         AuthenticationException authException) throws IOException {
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    @Override
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
+
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType("application/json");
-        response.getWriter().write("{\"error\": \"You are not authorised to access this\"}");
+
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("status", "401");
+        errorResponse.put("error", "Unauthorized");
+        errorResponse.put("message", authException.getLocalizedMessage() + " So, you are not authorised to access this endpoint.");
+
+        // Write the JSON response to the client
+        response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
     }
 }

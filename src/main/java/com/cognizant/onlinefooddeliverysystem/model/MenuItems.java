@@ -9,6 +9,7 @@ import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -62,8 +63,12 @@ public class MenuItems {
     @JsonBackReference()
     private Restaurant restaurant;
 
-    @OneToMany(mappedBy = "menuItems",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "menuItems", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference()
     private List<CartItem> cartItems;
+
+    @OneToMany(mappedBy = "menuItems", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonBackReference()
+    private Set<OrderItem> orderItems;
 
 }

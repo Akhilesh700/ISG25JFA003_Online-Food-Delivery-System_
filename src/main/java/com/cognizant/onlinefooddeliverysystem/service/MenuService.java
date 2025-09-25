@@ -3,7 +3,7 @@ package com.cognizant.onlinefooddeliverysystem.service;
 import com.cognizant.onlinefooddeliverysystem.dto.menuitem.CreateMenuItemRequestDto;
 import com.cognizant.onlinefooddeliverysystem.dto.menuitem.CreateMenuItemResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.menuitem.UpdateMenuItemRequestDto;
-import com.cognizant.onlinefooddeliverysystem.dto.menuitem.UpdateMenuItemResponseDto;
+import com.cognizant.onlinefooddeliverysystem.dto.UpdateEntityResponseDto;
 import com.cognizant.onlinefooddeliverysystem.exception.MenuItemNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.exception.menu.RestaurantNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.model.MenuItems;
@@ -16,8 +16,6 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -58,7 +56,7 @@ public class MenuService {
         );
     }
     @Transactional
-    public UpdateMenuItemResponseDto updateMenuItemByMenuItemId(Long menuItemId, UpdateMenuItemRequestDto requestDto){
+    public UpdateEntityResponseDto updateMenuItemByMenuItemId(Long menuItemId, UpdateMenuItemRequestDto requestDto){
         Map<String, Object> nonNullMenuField;
         MenuItems menuItemToUpdate = menuRepository.findById(menuItemId).orElseThrow(
                 () -> new MenuItemNotFoundException("Menu item not found with id: " + menuItemId)
@@ -70,7 +68,7 @@ public class MenuService {
         // 3. Mapping the non-null properties from the DTO to the entity
         // ModelMapper will only copy values from requestDto that are not null.
         mapper.map(requestDto, menuItemToUpdate);
-        return new UpdateMenuItemResponseDto(
+        return new UpdateEntityResponseDto(
                 nonNullMenuField.size(),
                 nonNullMenuField
         );

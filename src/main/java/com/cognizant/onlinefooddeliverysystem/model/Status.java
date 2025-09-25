@@ -20,7 +20,7 @@ public class Status {
     private Integer statusId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "StatusType")
+    @Column(name = "StatusType", unique = true)
     private StatusType statusType;
 
     public enum StatusType {

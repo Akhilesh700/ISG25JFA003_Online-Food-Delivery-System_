@@ -10,6 +10,8 @@ import com.cognizant.onlinefooddeliverysystem.exception.payment.InvalidPaymentTy
 import com.cognizant.onlinefooddeliverysystem.exception.payment.InvalidPaymentTypePinException;
 import com.cognizant.onlinefooddeliverysystem.exception.payment.PaymentException;
 import com.cognizant.onlinefooddeliverysystem.exception.signup.UserAlreadyExistsException;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -122,11 +124,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(PaymentException.class)
     public ResponseEntity<ErrorResponse> handlePaymentException(PaymentException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                "Bad Request",
+                HttpStatus.CONFLICT.value(),
+                "Payment Conflict",
                 ex.getMessage()
         );
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(InvalidPaymentTypePinException.class)
@@ -147,6 +149,26 @@ public class GlobalExceptionHandler {
                 ex.getMessage()
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Map<String, String> handleExpiredJwtException(ExpiredJwtException ex) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("status", "401");
+        errorResponse.put("error", "Unauthorized");
+        errorResponse.put("message", "JWT has expired. Please login again.");
+        return errorResponse;
+    }
+
+    @ExceptionHandler(MalformedJwtException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Map<String, String> handleMalformedJwtException(MalformedJwtException ex) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("status", "401");
+        errorResponse.put("error", "Unauthorized");
+        errorResponse.put("message", "Invalid JWT token.");
+        return errorResponse;
     }
 
     @ExceptionHandler(OnlineFoodDeliveryAppException.class)

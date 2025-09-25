@@ -4,7 +4,7 @@ package com.cognizant.onlinefooddeliverysystem.controller;
 import com.cognizant.onlinefooddeliverysystem.dto.cart.CartRequestDto;
 import com.cognizant.onlinefooddeliverysystem.dto.cart.CartResponseDto;
 import com.cognizant.onlinefooddeliverysystem.model.Cart;
-import com.cognizant.onlinefooddeliverysystem.service.CartServiceImp;
+import com.cognizant.onlinefooddeliverysystem.service.implimentation.CartServiceImp;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

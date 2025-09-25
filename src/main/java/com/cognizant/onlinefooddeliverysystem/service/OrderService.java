@@ -6,11 +6,13 @@ import com.cognizant.onlinefooddeliverysystem.dto.order.PlaceOrderRequestDto;
 import com.cognizant.onlinefooddeliverysystem.dto.order.PlaceOrderResponseDto;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 public interface OrderService {
 
 
     @Transactional
     PlaceOrderResponseDto placeOrderByCartId(PlaceOrderRequestDto request);
 
-    GetOrderHistoryResponseDto getOrderHistoryByCustomerId(int customerId);
+    List<GetOrderHistoryResponseDto> getOrderHistoryByCustomerId();
 }

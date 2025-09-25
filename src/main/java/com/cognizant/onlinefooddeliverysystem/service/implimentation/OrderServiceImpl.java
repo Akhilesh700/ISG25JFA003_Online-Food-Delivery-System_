@@ -1,12 +1,14 @@
-package com.cognizant.onlinefooddeliverysystem.service;
+package com.cognizant.onlinefooddeliverysystem.service.implimentation;
 
 import com.cognizant.onlinefooddeliverysystem.dto.order.GetOrderHistoryResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.order.PlaceOrderRequestDto;
 import com.cognizant.onlinefooddeliverysystem.dto.order.PlaceOrderResponseDto;
+import com.cognizant.onlinefooddeliverysystem.exception.MenuItemNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.exception.ResourceNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.exception.order.CartItemNotFoundWithCartIdException;
 import com.cognizant.onlinefooddeliverysystem.model.*;
 import com.cognizant.onlinefooddeliverysystem.repository.*;
+import com.cognizant.onlinefooddeliverysystem.service.OrderService;
 import com.cognizant.onlinefooddeliverysystem.util.GetVerifiedUser;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,7 @@ public class OrderServiceImpl implements OrderService {
     private final CustomerRepository customerRepository;
     private final UserRepository userRepository;
     private final GetVerifiedUser getVerifiedUser;
+    private final MenuItemRepository menuItemRepository;
 
     private Order createOrder(Cart cart, List<CartItem> cartItems, Status placedStatus, PlaceOrderRequestDto request){
         Order newOrder = new Order();
@@ -85,7 +88,27 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public GetOrderHistoryResponseDto getOrderHistoryByCustomerId(int customerId) {
-        return null;
+    public List<GetOrderHistoryResponseDto> getOrderHistoryByCustomerId() {
+        User user = getVerifiedUser.getVerifiedUser();
+        Customer customer = customerRepository.findByUser_UserId(user.getUserId());
+
+        List<Order> orders = orderRepository.findByCustomer_CustId(customer.getCustId());
+        return orders.stream().map(order -> {
+            List<OrderItem> orderedItems = orderItemRepository.findByOrder_OrderId(order.getOrderId());
+
+            List<MenuItems> menuItems = menuItemRepository.findByOrderItem_OrderId(orderedItems.getFirst().getOrderItemId());
+            if (menuItems.isEmpty()){
+                throw new MenuItemNotFoundException("Menu Items are not found by Order Item Id : " + orderedItems.getFirst().getOrderItemId());
+            }
+            return new GetOrderHistoryResponseDto(
+                    order.getOrderId(),
+                    menuItems.getFirst().getRestaurant().getName(),
+                    menuItems.getFirst().getRestaurant().getAddress(),
+                    order.getTotalAmount(),
+                    orderedItems,
+                    order.getStatus().getStatusType().toString(),
+                    order.getSpecialReq()
+            );
+        }).toList();
     }
 }

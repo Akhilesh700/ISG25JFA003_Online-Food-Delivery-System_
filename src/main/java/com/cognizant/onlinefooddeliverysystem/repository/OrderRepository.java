@@ -1,5 +1,6 @@
 package com.cognizant.onlinefooddeliverysystem.repository;
 
+import com.cognizant.onlinefooddeliverysystem.dto.order.GetOrderHistoryResponseDto;
 import com.cognizant.onlinefooddeliverysystem.util.OrderIdDeliveryId;
 import com.cognizant.onlinefooddeliverysystem.model.Order;
 import com.cognizant.onlinefooddeliverysystem.dto.order.UnassignedOrderDTO;
@@ -44,4 +45,6 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             "where orderid = :orderid;", nativeQuery = true)
     int updateOrderStatus(@Param("orderid") Integer orderId, @Param("statusid") Integer statusId);
 
+
+    List<Order> findByCustomer_CustId(Integer orderId);
 }

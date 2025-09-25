@@ -1,4 +1,4 @@
-package com.cognizant.onlinefooddeliverysystem.dto.menuitem;
+package com.cognizant.onlinefooddeliverysystem.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import java.util.Map;
 @Getter
 @Setter
 @AllArgsConstructor
-public class UpdateMenuItemResponseDto {
+public class UpdateEntityResponseDto {
     private int noOfAttributesUpdated;
     private Map<String, Object> updatedAttributes;
 }

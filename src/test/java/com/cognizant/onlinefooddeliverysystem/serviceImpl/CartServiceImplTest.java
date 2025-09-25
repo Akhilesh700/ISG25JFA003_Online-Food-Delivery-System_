@@ -14,7 +14,7 @@ import com.cognizant.onlinefooddeliverysystem.model.MenuItems;
 import com.cognizant.onlinefooddeliverysystem.repository.CartItemRepository;
 import com.cognizant.onlinefooddeliverysystem.repository.CartRepository;
 import com.cognizant.onlinefooddeliverysystem.repository.MenuRepository;
-import com.cognizant.onlinefooddeliverysystem.service.CartServiceImp;
+import com.cognizant.onlinefooddeliverysystem.service.implimentation.CartServiceImp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
