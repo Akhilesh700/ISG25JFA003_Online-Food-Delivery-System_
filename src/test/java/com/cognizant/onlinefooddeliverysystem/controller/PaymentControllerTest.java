@@ -8,7 +8,7 @@ import com.cognizant.onlinefooddeliverysystem.exception.payment.PaymentException
 import com.cognizant.onlinefooddeliverysystem.model.Payment;
 import com.cognizant.onlinefooddeliverysystem.repository.UserRepository;
 import com.cognizant.onlinefooddeliverysystem.security.AuthUtil;
-import com.cognizant.onlinefooddeliverysystem.service.PaymentService;
+import com.cognizant.onlinefooddeliverysystem.service.implimentation.PaymentServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,7 +46,7 @@ class PaymentControllerTest {
     private ObjectMapper objectMapper;
 
     @MockitoBean
-    private PaymentService paymentService;
+    private PaymentServiceImpl paymentServiceImpl;
 
     @MockitoBean
     private AuthUtil authUtil;
@@ -79,7 +79,7 @@ class PaymentControllerTest {
     @WithMockUser(roles = {"CUSTOMER"})
     void testInitiatePayment_Success() throws Exception {
         // Arrange
-        when(paymentService.initiatePayment(any(PaymentRequestDTO.class))).thenReturn(paymentResponseDTO);
+        when(paymentServiceImpl.initiatePayment(any(PaymentRequestDTO.class))).thenReturn(paymentResponseDTO);
 
         // Act & Assert
         mockMvc.perform(post(API_BASE_PATH + "/initiate")
@@ -97,7 +97,7 @@ class PaymentControllerTest {
     void testInitiatePayment_ThrowsPaymentException() throws Exception {
         // Arrange
         String errorMessage = "Order not found";
-        when(paymentService.initiatePayment(any(PaymentRequestDTO.class))).thenThrow(new PaymentException(errorMessage));
+        when(paymentServiceImpl.initiatePayment(any(PaymentRequestDTO.class))).thenThrow(new PaymentException(errorMessage));
 
         // Act & Assert
         mockMvc.perform(post(API_BASE_PATH + "/initiate")
@@ -119,7 +119,7 @@ class PaymentControllerTest {
     void testDummyCallback_Success() throws Exception {
         // Arrange
         String transactionId = "txn_12345abcde";
-        when(paymentService.processPaymentResponse(any(PaymentCallbackDTO.class))).thenReturn(transactionId);
+        when(paymentServiceImpl.processPaymentResponse(any(PaymentCallbackDTO.class))).thenReturn(transactionId);
 
         // Act & Assert
         mockMvc.perform(post(API_BASE_PATH + "/dummy-callback")
@@ -144,7 +144,7 @@ class PaymentControllerTest {
                 new PaymentStatusDTO(orderId, Payment.Status.Successful, "txn_123"),
                 new PaymentStatusDTO(orderId, Payment.Status.Failed, "txn_456")
         );
-        when(paymentService.getPaymentStatus(orderId)).thenReturn(statusList);
+        when(paymentServiceImpl.getPaymentStatus(orderId)).thenReturn(statusList);
 
         // Act & Assert
         mockMvc.perform(get(API_BASE_PATH + "/status/order/{orderId}", orderId)
@@ -163,7 +163,7 @@ class PaymentControllerTest {
     void testGetPaymentStatus_Success_WithNoResults() throws Exception {
         // Arrange
         Integer orderId = 99;
-        when(paymentService.getPaymentStatus(orderId)).thenReturn(Collections.emptyList());
+        when(paymentServiceImpl.getPaymentStatus(orderId)).thenReturn(Collections.emptyList());
 
         // Act & Assert
         mockMvc.perform(get(API_BASE_PATH + "/status/order/{orderId}", orderId)
