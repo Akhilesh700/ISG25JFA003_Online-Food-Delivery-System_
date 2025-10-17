@@ -4,7 +4,6 @@ import com.cognizant.onlinefooddeliverysystem.dto.OrderResponseDTO;
 import com.cognizant.onlinefooddeliverysystem.dto.order.UnassignedOrderDTO;
 import com.cognizant.onlinefooddeliverysystem.exception.StatusNotChangedException;
 import com.cognizant.onlinefooddeliverysystem.model.DeliveryAgent;
-import com.cognizant.onlinefooddeliverysystem.model.Status;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 
