@@ -4,6 +4,7 @@ import com.cognizant.onlinefooddeliverysystem.dto.menuitem.CreateMenuItemRequest
 import com.cognizant.onlinefooddeliverysystem.dto.menuitem.CreateMenuItemResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.menuitem.UpdateMenuItemRequestDto;
 import com.cognizant.onlinefooddeliverysystem.dto.UpdateEntityResponseDto;
+import com.cognizant.onlinefooddeliverysystem.dto.restaurant.RestaurantResponseDTO;
 import com.cognizant.onlinefooddeliverysystem.model.MenuItems;
 import com.cognizant.onlinefooddeliverysystem.service.MenuService;
 import lombok.AllArgsConstructor;
@@ -43,6 +44,11 @@ MenuController {
     @PostMapping("/update-menu/{menuItemId}")
     public ResponseEntity<UpdateEntityResponseDto> updateMenuItemByMenuItemId(@PathVariable Long menuItemId, @RequestBody UpdateMenuItemRequestDto requestDto){
         return ResponseEntity.ok(service.updateMenuItemByMenuItemId(menuItemId, requestDto));
+    }
+
+    @GetMapping("/restaurant/{id}")
+    public ResponseEntity<RestaurantResponseDTO> getRestaurantById(@PathVariable Integer id){
+        return  ResponseEntity.ok(service.getRestaurantById(id));
     }
 
 //    TODO: To implement like query for dynamic searching of menu and along with typing of user

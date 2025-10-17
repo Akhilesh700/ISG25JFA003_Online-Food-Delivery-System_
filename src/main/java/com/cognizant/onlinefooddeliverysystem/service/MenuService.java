@@ -4,6 +4,7 @@ import com.cognizant.onlinefooddeliverysystem.dto.menuitem.CreateMenuItemRequest
 import com.cognizant.onlinefooddeliverysystem.dto.menuitem.CreateMenuItemResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.menuitem.UpdateMenuItemRequestDto;
 import com.cognizant.onlinefooddeliverysystem.dto.UpdateEntityResponseDto;
+import com.cognizant.onlinefooddeliverysystem.dto.restaurant.RestaurantResponseDTO;
 import com.cognizant.onlinefooddeliverysystem.exception.MenuItemNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.exception.menu.RestaurantNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.model.MenuItems;
@@ -14,8 +15,11 @@ import com.cognizant.onlinefooddeliverysystem.util.ReflectionFilterService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
@@ -75,6 +79,28 @@ public class MenuService {
     }
 
     // TODO: Dynamic URL for Restaurant searching
+
+
+
+    public RestaurantResponseDTO getRestaurantById(Integer restaurantId) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(
+                () -> new RestaurantNotFoundException( "Restaurant not found with id: " + restaurantId)
+        );
+
+
+        return RestaurantResponseDTO.builder()
+                .restaurantId(restaurantId)
+                .name(restaurant.getName())
+                .address(restaurant.getAddress())
+                .ETA(Math.max(20, restaurantId * 92874563 % 60))
+                .rating(Math.max(2.3f, restaurantId * 237469234 % 5 ))
+                .deliveryFee(Math.max(50f, restaurantId * 92874563 % 200))
+                .isOpen(restaurant.getCloseTime().isBefore(LocalTime.now()))
+                .logoUrl(restaurant.getImgUrl() == null ? "https://img.freepik.com/free-photo/top-view-fast-food-mix-mozzarella-sticks-club-sandwich-hamburger-mushroom-pizza-caesar-shrimp-salad-french-fries-ketchup-mayo-cheese-sauces-table_141793-3998.jpg" : restaurant.getImgUrl())
+                .bannerUrl(restaurant.getImgUrl() == null ? "https://img.freepik.com/free-photo/top-view-fast-food-mix-mozzarella-sticks-club-sandwich-hamburger-mushroom-pizza-caesar-shrimp-salad-french-fries-ketchup-mayo-cheese-sauces-table_141793-3998.jpg" : restaurant.getImgUrl())
+                .build();
+
+    }
 
 
 }
