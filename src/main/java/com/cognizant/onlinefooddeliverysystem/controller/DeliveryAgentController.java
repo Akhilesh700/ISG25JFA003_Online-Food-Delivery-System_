@@ -1,7 +1,9 @@
 package com.cognizant.onlinefooddeliverysystem.controller;
 
+import com.cognizant.onlinefooddeliverysystem.dto.deliveryagent.DeliveryAgentProfileDTO;
 import com.cognizant.onlinefooddeliverysystem.dto.order.GetOrderHistoryByDeliveryAgentResponse;
 import com.cognizant.onlinefooddeliverysystem.model.DeliveryAgent;
+import com.cognizant.onlinefooddeliverysystem.service.DeliveryAgentService;
 import com.cognizant.onlinefooddeliverysystem.service.DeliveryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +17,7 @@ import java.util.List;
 public class DeliveryAgentController {
 
     private final DeliveryService deliveryService;
-
+    private final DeliveryAgentService deliveryAgentService;
     @PatchMapping("/change-status")
     public ResponseEntity<String> updateDeliveryAgentStatus(@RequestParam DeliveryAgent.Status newStatus){
         return deliveryService.updateDeliveryAgentStatus(newStatus);
@@ -24,6 +26,11 @@ public class DeliveryAgentController {
     @GetMapping("/order-history")
     public List<GetOrderHistoryByDeliveryAgentResponse> getOrderHistoryByDeliveryAgent(){
         return deliveryService.getOrderHistoryByDeliveryAgent();
+    }
+
+    @GetMapping("/profile")
+    public DeliveryAgentProfileDTO getDeliveryAgentProfile(){
+        return deliveryAgentService.getDeliveryAgentProfile();
     }
 
 }
