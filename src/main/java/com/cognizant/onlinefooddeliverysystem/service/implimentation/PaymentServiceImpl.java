@@ -43,7 +43,6 @@ public class PaymentServiceImpl implements PaymentService {
 
         Set<Payment> payments = order.getPayments();
 
-//      Hybernate ensures payments pass as empty other than null.
         PaymentResponseDTO response;
         if (payments.stream().anyMatch(p -> p.getPaymentStatus() == Payment.Status.Successful )) {
             throw new PaymentException("Payment for order Id : " + order.getOrderId() + " is already successful.");

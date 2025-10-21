@@ -6,7 +6,7 @@ import com.cognizant.onlinefooddeliverysystem.model.Cart;
 
 public interface CartService {
 
-    CartResponseDto addToCart(Integer customerId , CartRequestDto request);
+    CartResponseDto addToCart(CartRequestDto request);
     Cart getCartByCustomerId(Integer customerId);
     Cart getCartByVerifiedUser();
 }
