@@ -2,6 +2,7 @@ package com.cognizant.onlinefooddeliverysystem.controller;
 import com.cognizant.onlinefooddeliverysystem.dto.order.GetOrderHistoryResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.order.PlaceOrderRequestDto;
 import com.cognizant.onlinefooddeliverysystem.dto.order.PlaceOrderResponseDto;
+import com.cognizant.onlinefooddeliverysystem.dto.order.UpdatePaymentRequestDto;
 import com.cognizant.onlinefooddeliverysystem.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,5 +26,11 @@ public class OrderController {
     @GetMapping("history")
     public List<GetOrderHistoryResponseDto> getOrderHistoryByCustomerId(){
         return orderService.getOrderHistoryByCustomerId();
+    }
+
+    @PutMapping("/{orderId}/payment")
+    public ResponseEntity<Void> updatePaymentStatus(@PathVariable Integer orderId, @RequestBody UpdatePaymentRequestDto request) {
+        orderService.updateOrderPaymentStatus(orderId, request);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

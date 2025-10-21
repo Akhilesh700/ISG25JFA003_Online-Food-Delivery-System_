@@ -61,7 +61,7 @@ public class CartServiceImp implements CartService {
 
     @Override
     @Transactional
-    public CartResponseDto addToCart(Integer customerIdd, CartRequestDto request){
+    public CartResponseDto addToCart(CartRequestDto request){
         List<OrderItemDto> menuItems = Optional.ofNullable(request.getOrderItems())
                 .filter(list -> !list.isEmpty())
                 .orElseThrow(() -> new EmptyCartException("no menu items found."));

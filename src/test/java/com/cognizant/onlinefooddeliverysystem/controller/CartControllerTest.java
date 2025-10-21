@@ -89,7 +89,7 @@ public class CartControllerTest {
     @WithMockUser(roles = {"CUSTOMER"})
     void testAddToCart_Success() throws Exception {
         // Arrange: Mock the service to return a successful response
-        when(cartServiceImp.addToCart(eq(customerId), any(CartRequestDto.class))).thenReturn(cartResponseDto);
+        when(cartServiceImp.addToCart(any(CartRequestDto.class))).thenReturn(cartResponseDto);
 
         // Act & Assert
         mockMvc.perform(post(API_BASE_PATH + "/add")

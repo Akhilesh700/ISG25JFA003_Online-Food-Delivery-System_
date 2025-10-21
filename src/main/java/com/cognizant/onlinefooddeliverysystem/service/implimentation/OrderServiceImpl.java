@@ -3,9 +3,12 @@ package com.cognizant.onlinefooddeliverysystem.service.implimentation;
 import com.cognizant.onlinefooddeliverysystem.dto.order.GetOrderHistoryResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.order.PlaceOrderRequestDto;
 import com.cognizant.onlinefooddeliverysystem.dto.order.PlaceOrderResponseDto;
+import com.cognizant.onlinefooddeliverysystem.dto.order.UpdatePaymentRequestDto;
+import com.cognizant.onlinefooddeliverysystem.dto.payment.PaymentResponseDTO;
 import com.cognizant.onlinefooddeliverysystem.exception.MenuItemNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.exception.ResourceNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.exception.order.CartItemNotFoundWithCartIdException;
+import com.cognizant.onlinefooddeliverysystem.exception.payment.PaymentException;
 import com.cognizant.onlinefooddeliverysystem.model.*;
 import com.cognizant.onlinefooddeliverysystem.repository.*;
 import com.cognizant.onlinefooddeliverysystem.service.OrderService;
@@ -15,7 +18,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -30,6 +36,7 @@ public class OrderServiceImpl implements OrderService {
     private final UserRepository userRepository;
     private final GetVerifiedUser getVerifiedUser;
     private final MenuItemRepository menuItemRepository;
+    private PaymentRepository paymentRepository;
 
     private Order createOrder(Cart cart, List<CartItem> cartItems, Status placedStatus, PlaceOrderRequestDto request){
         Order newOrder = new Order();
@@ -82,6 +89,7 @@ public class OrderServiceImpl implements OrderService {
             cartRepository.resetCartById(cart.getId());
 
         return new PlaceOrderResponseDto(
+                placedOrder.getOrderId(),
                 rowsAffected,
                 "Order placed successfully!"
         );
@@ -112,5 +120,32 @@ public class OrderServiceImpl implements OrderService {
                     order.getSpecialReq()
             );
         }).toList();
+    }
+
+    @Override
+    public void updateOrderPaymentStatus(Integer orderId, UpdatePaymentRequestDto request){
+        Order order = orderRepository.findOrderByOrderId(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID: " + orderId));
+
+        Set<Payment> payments = order.getPayments();
+
+        if (payments.stream().anyMatch(p -> p.getPaymentStatus() == Payment.Status.Successful )) {
+            throw new PaymentException("Payment for order Id : " + order.getOrderId() + " is already successful.");
+        }else {
+            Payment payment = new Payment();
+            payment.setOrder(order);
+            payment.setAmount(BigDecimal.valueOf(request.getAmount()));
+            payment.setMethod("Online");
+            payment.setPaymentStatus(request.getStatus());
+            payment.setPaymentType("Pre_Paid");
+            payment.setTransactionId(request.getPaymentId());
+            payment.setTimestamp(LocalDateTime.now());
+
+            payments.add(payment);
+            Status status = statusRepository.findByStatusType(Status.StatusType.valueOf("PLACED"))
+                    .orElseThrow(() -> new ResourceNotFoundException("Not_Accepted Status Not Found"));
+            order.setStatus(status);
+            orderRepository.save(order);
+        }
     }
 }

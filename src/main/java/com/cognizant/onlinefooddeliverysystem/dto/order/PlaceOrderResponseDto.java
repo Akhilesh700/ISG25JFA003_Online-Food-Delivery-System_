@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class PlaceOrderResponseDto {
+    int orderId;
     int totalOrderItems;
     String message;
 }

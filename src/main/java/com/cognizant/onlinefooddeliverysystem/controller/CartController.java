@@ -21,8 +21,8 @@ public class CartController {
 
     @PostMapping("/add")
 //    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
-    public ResponseEntity<CartResponseDto> addToCart(@RequestHeader("customerId") Integer customerId, @RequestBody CartRequestDto request) {
-        CartResponseDto cartId= cartService.addToCart(customerId, request);
+    public ResponseEntity<CartResponseDto> addToCart(@RequestBody CartRequestDto request) {
+        CartResponseDto cartId= cartService.addToCart(request);
         return new ResponseEntity<>(cartId, HttpStatus.OK);
     }
 
