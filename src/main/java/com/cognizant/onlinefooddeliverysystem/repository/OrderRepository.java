@@ -1,6 +1,7 @@
 package com.cognizant.onlinefooddeliverysystem.repository;
 
 import com.cognizant.onlinefooddeliverysystem.dto.order.GetOrderHistoryResponseDto;
+import com.cognizant.onlinefooddeliverysystem.dto.restaurant.RestaurantOrderHistoryResponseDTO;
 import com.cognizant.onlinefooddeliverysystem.util.OrderIdDeliveryId;
 import com.cognizant.onlinefooddeliverysystem.model.Order;
 import com.cognizant.onlinefooddeliverysystem.dto.order.UnassignedOrderDTO;
@@ -47,4 +48,20 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
 
     List<Order> findByCustomer_CustId(Integer orderId);
+
+    @Query("SELECT new com.cognizant.onlinefooddeliverysystem.dto.restaurant.RestaurantOrderHistoryResponseDTO(" +
+            "    o.orderId, " +
+            "    o.orderTime, " +
+            "    o.specialReq, " +
+            "    o.totalAmount, " +
+            "    c.name, " +
+            "    c.phone, " +
+            "    s.statusType" +
+            ") " +
+            "FROM Order o " +
+            "JOIN o.customer c " +
+            "JOIN o.status s " +
+            "JOIN o.restaurant r " +
+            "WHERE r.restId = :restId")
+    List<RestaurantOrderHistoryResponseDTO> findByRestaurant_RestId(@Param("restId") Integer restId);
 }
