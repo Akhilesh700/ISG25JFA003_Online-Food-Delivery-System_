@@ -1,6 +1,7 @@
 package com.cognizant.onlinefooddeliverysystem.service.implimentation;
 
 import com.cognizant.onlinefooddeliverysystem.dto.order.AcceptRejectOrderResponseDto;
+import com.cognizant.onlinefooddeliverysystem.dto.restaurant.RestaurantOrderHistoryResponseDTO;
 import com.cognizant.onlinefooddeliverysystem.exception.InvalidRequestException;
 import com.cognizant.onlinefooddeliverysystem.exception.ResourceNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.exception.menu.RestaurantNotFoundException;
@@ -17,6 +18,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class RestaurantServiceImpl implements RestaurantService {
@@ -25,6 +28,19 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final OrderRepository orderRepository;
     private final StatusRepository statusRepository;
+
+    @Override
+    public List<RestaurantOrderHistoryResponseDTO> getOrderHistoryByRestaurant() {
+        User user = getVerifiedUser.getVerifiedUser();
+        if(user == null) {
+            throw new ResourceNotFoundException("User Not Found from JWT token") ;
+        }
+        Restaurant restaurant = restaurantRepository.findByUser_UserId(user.getUserId());
+        if(restaurant == null) {
+            throw new ResourceNotFoundException("Restaurant Not Found with user id : " + user.getUserId()) ;
+        }
+        return orderRepository.findByRestaurant_RestId(restaurant.getRestId());
+    }
 
     @Override
     @Transactional

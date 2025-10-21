@@ -2,6 +2,7 @@ package com.cognizant.onlinefooddeliverysystem.service.implimentation;
 
 
 import com.cognizant.onlinefooddeliverysystem.dto.OrderResponseDTO;
+import com.cognizant.onlinefooddeliverysystem.dto.order.GetOrderHistoryByDeliveryAgentResponse;
 import com.cognizant.onlinefooddeliverysystem.exception.InvalidRequestException;
 import com.cognizant.onlinefooddeliverysystem.exception.ResourceNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.exception.StatusNotChangedException;
@@ -175,6 +176,19 @@ public class DeliveryServiceImpl implements DeliveryService {
         deliveryAgent.setStatus(status);
 
         return new ResponseEntity<>("Status Has Been Changed to  " + status.toString() + ".", HttpStatus.OK);
+    }
+
+    @Override
+    public List<GetOrderHistoryByDeliveryAgentResponse> getOrderHistoryByDeliveryAgent() {
+        User user = getVerifiedUser.getVerifiedUser();
+        if(user == null){
+            throw new ResourceNotFoundException("User not found with the JWT token");
+        }
+        DeliveryAgent agent = deliveryAgentDao.findByUser_UserId(user.getUserId());
+        if(agent == null){
+            throw new ResourceNotFoundException("Delivery Agent Not found with user Id : " + user.getUserId());
+        }
+        return orderRepository.findOrderHistory(agent.getAgentId());
     }
 
 
