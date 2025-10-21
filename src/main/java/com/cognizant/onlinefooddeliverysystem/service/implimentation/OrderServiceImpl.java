@@ -143,8 +143,10 @@ public class OrderServiceImpl implements OrderService {
 
             payments.add(payment);
             Status status = statusRepository.findByStatusType(Status.StatusType.valueOf("PLACED"))
-                    .orElseThrow(() -> new ResourceNotFoundException("Not_Accepted Status Not Found"));
-            order.setStatus(status);
+                    .orElseThrow(() -> new ResourceNotFoundException("PLACED Status Not Found"));
+            if(request.getStatus() == Payment.Status.Successful ){
+                order.setStatus(status);
+            }
             orderRepository.save(order);
         }
     }

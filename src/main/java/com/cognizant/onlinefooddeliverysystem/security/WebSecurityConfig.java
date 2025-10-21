@@ -67,6 +67,7 @@ public class WebSecurityConfig {
                         .requestMatchers(apiVersionPath + "/customer/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_CUSTOMER")
                         .requestMatchers(apiVersionPath + "/restaurant/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_RESTAURANT")
                         .requestMatchers(apiVersionPath + "/delivery-agent/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_DELIVERY_AGENT")
+                        .requestMatchers(apiVersionPath + "/deliveries/{orderId}/delivery-status").hasAnyAuthority("ROLE_ADMIN", "ROLE_CUSTOMER")
                         .requestMatchers(apiVersionPath + "/deliveries/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_RESTAURANT")
                         .requestMatchers(apiVersionPath + "/admin/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()

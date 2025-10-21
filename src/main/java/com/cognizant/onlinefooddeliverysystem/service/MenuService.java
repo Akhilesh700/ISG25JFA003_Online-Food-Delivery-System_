@@ -9,8 +9,10 @@ import com.cognizant.onlinefooddeliverysystem.exception.MenuItemNotFoundExceptio
 import com.cognizant.onlinefooddeliverysystem.exception.menu.RestaurantNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.model.MenuItems;
 import com.cognizant.onlinefooddeliverysystem.model.Restaurant;
+import com.cognizant.onlinefooddeliverysystem.model.User;
 import com.cognizant.onlinefooddeliverysystem.repository.MenuRepository;
 import com.cognizant.onlinefooddeliverysystem.repository.RestaurantRepository;
+import com.cognizant.onlinefooddeliverysystem.util.GetVerifiedUser;
 import com.cognizant.onlinefooddeliverysystem.util.ReflectionFilterService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -32,6 +34,7 @@ public class MenuService {
     private final RestaurantRepository restaurantRepository;
     private ModelMapper mapper;
     private ReflectionFilterService reflectionFilterService;
+    private final GetVerifiedUser getVerifiedUser;
 
     public List<MenuItems> getAllMenu(){
         return menuRepository.findAll();
@@ -61,10 +64,21 @@ public class MenuService {
     }
     @Transactional
     public UpdateEntityResponseDto updateMenuItemByMenuItemId(Long menuItemId, UpdateMenuItemRequestDto requestDto){
+        User user = getVerifiedUser.getVerifiedUser();
+        if(user == null) {
+            throw  new RestaurantNotFoundException("User not found with JWT Token.");
+        }
+        Restaurant restaurant = restaurantRepository.findByUser_UserId(user.getUserId());
+        if(restaurant == null) {
+            throw  new RestaurantNotFoundException("User is not a Restaurant. with user id: " + user.getUserId());
+        }
         Map<String, Object> nonNullMenuField;
         MenuItems menuItemToUpdate = menuRepository.findById(menuItemId).orElseThrow(
                 () -> new MenuItemNotFoundException("Menu item not found with id: " + menuItemId)
         );
+        if(restaurant.getRestId() != menuItemToUpdate.getRestaurant().getRestId()) {
+            throw new IllegalArgumentException("This menu item with id: " + menuItemId + " does not belongs to restaurant with id: " + restaurant.getRestId());
+        }
         nonNullMenuField = reflectionFilterService.getNonNullFields(requestDto);
         // 2. Configuring ModelMapper to skip null fields ------ This is used for partial updates
         mapper.getConfiguration().setSkipNullEnabled(true);
