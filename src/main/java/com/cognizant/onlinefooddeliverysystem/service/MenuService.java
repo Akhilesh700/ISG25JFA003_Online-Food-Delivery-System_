@@ -70,10 +70,21 @@ public class MenuService {
     }
     @Transactional
     public UpdateEntityResponseDto updateMenuItemByMenuItemId(Long menuItemId, UpdateMenuItemRequestDto requestDto){
+        User user = getVerifiedUser.getVerifiedUser();
+        if(user == null) {
+            throw  new RestaurantNotFoundException("User not found with JWT Token.");
+        }
+        Restaurant restaurant = restaurantRepository.findByUser_UserId(user.getUserId());
+        if(restaurant == null) {
+            throw  new RestaurantNotFoundException("User is not a Restaurant. with user id: " + user.getUserId());
+        }
         Map<String, Object> nonNullMenuField;
         MenuItems menuItemToUpdate = menuRepository.findById(menuItemId).orElseThrow(
                 () -> new MenuItemNotFoundException("Menu item not found with id: " + menuItemId)
         );
+        if(restaurant.getRestId() != menuItemToUpdate.getRestaurant().getRestId()) {
+            throw new IllegalArgumentException("This menu item with id: " + menuItemId + " does not belongs to restaurant with id: " + restaurant.getRestId());
+        }
         nonNullMenuField = reflectionFilterService.getNonNullFields(requestDto);
         // 2. Configuring ModelMapper to skip null fields ------ This is used for partial updates
         mapper.getConfiguration().setSkipNullEnabled(true);
