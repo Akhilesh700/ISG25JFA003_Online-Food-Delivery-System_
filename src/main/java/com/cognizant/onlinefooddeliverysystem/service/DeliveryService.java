@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface DeliveryService {
 
-    ResponseEntity<List<UnassignedOrderDTO>> getUnassignedOrders(Integer restaurantId);
+    ResponseEntity<List<UnassignedOrderDTO>> getUnassignedOrders();
 
     ResponseEntity<List<DeliveryAgent>> getAllAvailableDeliveryAgent();
 

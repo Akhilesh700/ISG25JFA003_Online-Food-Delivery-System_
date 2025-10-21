@@ -1,9 +1,12 @@
 package com.cognizant.onlinefooddeliverysystem.controller;
 
 import com.cognizant.onlinefooddeliverysystem.dto.OrderResponseDTO;
+import com.cognizant.onlinefooddeliverysystem.model.Delivery;
 import com.cognizant.onlinefooddeliverysystem.model.DeliveryAgent;
 import com.cognizant.onlinefooddeliverysystem.dto.order.UnassignedOrderDTO;
+import com.cognizant.onlinefooddeliverysystem.service.implimentation.DeliveryAssignmentServiceImpl;
 import com.cognizant.onlinefooddeliverysystem.service.implimentation.DeliveryServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,20 +15,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("${api.version.path}/deliveries")
+@RequiredArgsConstructor
 public class DeliveryController {
 
-    DeliveryServiceImpl deliveryServiceImpl;
-
-    @Autowired
-    DeliveryController(DeliveryServiceImpl deliveryServiceImpl){
-        this.deliveryServiceImpl = deliveryServiceImpl;
-    }
-
-
+    private final DeliveryServiceImpl deliveryServiceImpl;
+    private final DeliveryAssignmentServiceImpl deliveryAssignmentService;
     //For the manager's dashboard to display orders ready for delivery.
     @GetMapping("/unassigned")
-    public ResponseEntity<List<UnassignedOrderDTO>> getUnassignedOrders(@RequestHeader("restId") Integer restId) {
-        return deliveryServiceImpl.getUnassignedOrders(restId);
+    public ResponseEntity<List<UnassignedOrderDTO>> getUnassignedOrders() {
+        return deliveryServiceImpl.getUnassignedOrders();
     }
 
 
@@ -40,8 +38,8 @@ public class DeliveryController {
     }
 
     @PostMapping("/assign-order/{orderId}")
-    public ResponseEntity<Boolean> assignOrder(@PathVariable("orderId") Integer id) {
-        return deliveryServiceImpl.assignOrder(id);
+    public ResponseEntity<Delivery> assignOrder(@PathVariable("orderId") Integer id) {
+        return ResponseEntity.ok(deliveryAssignmentService.assignOrder(id));
     }
 
 
