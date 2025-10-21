@@ -1,6 +1,7 @@
 package com.cognizant.onlinefooddeliverysystem.service;
 
 import com.cognizant.onlinefooddeliverysystem.dto.OrderResponseDTO;
+import com.cognizant.onlinefooddeliverysystem.dto.order.GetOrderHistoryByDeliveryAgentResponse;
 import com.cognizant.onlinefooddeliverysystem.dto.order.UnassignedOrderDTO;
 import com.cognizant.onlinefooddeliverysystem.exception.StatusNotChangedException;
 import com.cognizant.onlinefooddeliverysystem.model.DeliveryAgent;
@@ -27,4 +28,6 @@ public interface DeliveryService {
 
     @Transactional
     ResponseEntity<String> updateDeliveryAgentStatus(DeliveryAgent.Status status);
+
+    List<GetOrderHistoryByDeliveryAgentResponse> getOrderHistoryByDeliveryAgent();
 }

@@ -1,5 +1,6 @@
 package com.cognizant.onlinefooddeliverysystem.repository;
 
+import com.cognizant.onlinefooddeliverysystem.dto.order.GetOrderHistoryByDeliveryAgentResponse;
 import com.cognizant.onlinefooddeliverysystem.dto.order.GetOrderHistoryResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.restaurant.RestaurantOrderHistoryResponseDTO;
 import com.cognizant.onlinefooddeliverysystem.util.OrderIdDeliveryId;
@@ -64,4 +65,24 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             "JOIN o.restaurant r " +
             "WHERE r.restId = :restId")
     List<RestaurantOrderHistoryResponseDTO> findByRestaurant_RestId(@Param("restId") Integer restId);
+
+    @Query("SELECT NEW com.cognizant.onlinefooddeliverysystem.dto.order.GetOrderHistoryByDeliveryAgentResponse(\n" +
+            "    o.id,\n" +
+            "    r.name,\n" +
+            "    c.name,\n" +
+            "    c.phone,\n" +
+            "    o.orderTime,\n" +
+            "    r.address,\n" +
+            "    c.address,\n" +
+            "    s.statusType,\n" +
+            "(SELECT COUNT(item.id) FROM OrderItem item WHERE item.order = o)\n" +
+            ")\n" +
+            "FROM Order o\n" +
+            "JOIN o.delivery d\n" +
+            "JOIN o.customer c\n" +
+            "JOIN o.status s\n" +
+            "JOIN o.restaurant r\n" +
+            "JOIN d.deliveryAgent a\n" +
+            "WHERE a.agentId = :agentId")
+    List<GetOrderHistoryByDeliveryAgentResponse> findOrderHistory(@Param("agentId") Integer agentId);
 }

@@ -24,4 +24,6 @@ public interface DeliveryAgentDao extends JpaRepository<DeliveryAgent, Integer> 
 
     @Query("SELECT da FROM DeliveryAgent da WHERE da.user.userId = :userId")
     Optional<DeliveryAgent> findDeliveryAgentByUserId(@Param("userId") Integer id);
+
+    DeliveryAgent findByUser_UserId(Integer userId);
 }

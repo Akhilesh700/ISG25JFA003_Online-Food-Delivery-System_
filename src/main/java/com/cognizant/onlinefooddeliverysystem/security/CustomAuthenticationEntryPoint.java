@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO: Understand this file
 @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
