@@ -6,11 +6,14 @@ import com.cognizant.onlinefooddeliverysystem.dto.menuitem.UpdateMenuItemRequest
 import com.cognizant.onlinefooddeliverysystem.dto.UpdateEntityResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.restaurant.RestaurantResponseDTO;
 import com.cognizant.onlinefooddeliverysystem.exception.MenuItemNotFoundException;
+import com.cognizant.onlinefooddeliverysystem.exception.ResourceNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.exception.menu.RestaurantNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.model.MenuItems;
 import com.cognizant.onlinefooddeliverysystem.model.Restaurant;
+import com.cognizant.onlinefooddeliverysystem.model.User;
 import com.cognizant.onlinefooddeliverysystem.repository.MenuRepository;
 import com.cognizant.onlinefooddeliverysystem.repository.RestaurantRepository;
+import com.cognizant.onlinefooddeliverysystem.util.GetVerifiedUser;
 import com.cognizant.onlinefooddeliverysystem.util.ReflectionFilterService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -32,6 +35,7 @@ public class MenuService {
     private final RestaurantRepository restaurantRepository;
     private ModelMapper mapper;
     private ReflectionFilterService reflectionFilterService;
+    private final GetVerifiedUser getVerifiedUser;
 
     public List<MenuItems> getAllMenu(){
         return menuRepository.findAll();
@@ -42,10 +46,15 @@ public class MenuService {
         return menuItemsList;
     }
 // TODO: Dynamic URL for menu searching
-    public CreateMenuItemResponseDto addMenuItem(int restID, CreateMenuItemRequestDto createMenuItemRequestDto){
-            Restaurant restaurant = restaurantRepository.findById(restID).orElseThrow(
-                    () -> new RestaurantNotFoundException( "Restaurant not found with id: " + restID)
-            );
+    public CreateMenuItemResponseDto addMenuItem(CreateMenuItemRequestDto createMenuItemRequestDto){
+        User user = getVerifiedUser.getVerifiedUser();
+        if(user == null){
+            throw new ResourceNotFoundException("Restaurant not found by the user of JWT");
+        }
+        Restaurant restaurant = restaurantRepository.findByUser_UserId(user.getUserId());
+        if(restaurant == null){
+            throw new RestaurantNotFoundException( "Restaurant not found with id: " + user.getUserId());
+        }
         MenuItems menuItem = mapper.map(createMenuItemRequestDto, MenuItems.class);
 
         // Setting the relationship with the restaurant.

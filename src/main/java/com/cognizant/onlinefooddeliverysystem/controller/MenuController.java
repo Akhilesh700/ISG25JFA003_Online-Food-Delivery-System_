@@ -28,10 +28,10 @@ MenuController {
 
 
     // Method 2: Endpoint for adding menu to a restaurant by restId
-    @PostMapping("/{restID}")
-    public ResponseEntity<CreateMenuItemResponseDto> addMenuItemByRestaurantId(@PathVariable Integer restID, @RequestBody CreateMenuItemRequestDto createMenuItemRequestDto) throws Exception {
+    @PostMapping("/")
+    public ResponseEntity<CreateMenuItemResponseDto> addMenuItemByRestaurantId( @RequestBody CreateMenuItemRequestDto createMenuItemRequestDto) throws Exception {
 
-        return ResponseEntity.ok(service.addMenuItem(restID, createMenuItemRequestDto));
+        return ResponseEntity.ok(service.addMenuItem(createMenuItemRequestDto));
     }
 
     // Method 3: Endpoint for getting the menu items of a particular restaurant by restaurant ID
@@ -40,7 +40,6 @@ MenuController {
             return service.getAllMenuByRestaurantID(restID);
     }
 
-//    TODO: To Implement menu update api
     @PostMapping("/update-menu/{menuItemId}")
     public ResponseEntity<UpdateEntityResponseDto> updateMenuItemByMenuItemId(@PathVariable Long menuItemId, @RequestBody UpdateMenuItemRequestDto requestDto){
         return ResponseEntity.ok(service.updateMenuItemByMenuItemId(menuItemId, requestDto));
@@ -51,6 +50,5 @@ MenuController {
         return  ResponseEntity.ok(service.getRestaurantById(id));
     }
 
-//    TODO: To implement like query for dynamic searching of menu and along with typing of user
 
 }
