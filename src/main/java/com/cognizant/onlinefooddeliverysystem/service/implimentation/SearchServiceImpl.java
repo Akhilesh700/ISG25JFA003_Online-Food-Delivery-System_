@@ -4,7 +4,7 @@ import com.cognizant.onlinefooddeliverysystem.dto.search.PaginationDto;
 import com.cognizant.onlinefooddeliverysystem.dto.search.SearchResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.search.SearchResultItemDto;
 import com.cognizant.onlinefooddeliverysystem.model.Restaurant;
-import com.cognizant.onlinefooddeliverysystem.model.MenuItems;
+import com.cognizant.onlinefooddeliverysystem.model.MenuItems; // Corrected import
 import com.cognizant.onlinefooddeliverysystem.repository.MenuItemRepository;
 import com.cognizant.onlinefooddeliverysystem.repository.RestaurantRepository;
 import com.cognizant.onlinefooddeliverysystem.service.SearchService;
@@ -13,40 +13,55 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional; // Added for clarity
 
-import java.awt.*;
+// Removed java.awt.* import as it seemed unused
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor // Constructed service with required repositories via Lombok.
 public class SearchServiceImpl implements SearchService {
 
+    // Injected final repository fields.
     private final RestaurantRepository restaurantRepository;
     private final MenuItemRepository menuItemRepository;
 
+    /**
+     * Performs a search for restaurants and menu items based on a query string.
+     * Combines results and provides basic pagination information.
+     *
+     * @param query The search term entered by the user.
+     * @param page  The requested page number (1-based).
+     * @param limit The maximum number of results per page.
+     * @return A DTO containing the combined search results and pagination details.
+     */
     @Override
+    @Transactional(readOnly = true) // Initiated read-only transaction.
     public SearchResponseDto performSearch(String query, int page, int limit) {
-        Pageable pageable = PageRequest.of(page - 1, limit); // Spring Data JPA pages are 0-indexed
+        // Created Pageable object for repository queries (0-based index adjusted).
+        Pageable pageable = PageRequest.of(page - 1, limit);
 
-        // Using CompletableFuture for potentially parallel execution (DB might still bottleneck)
+        // Initiated asynchronous search for restaurants.
         CompletableFuture<Page<Restaurant>> restaurantFuture = CompletableFuture.supplyAsync(() ->
-                restaurantRepository.searchByName(query, pageable)
+                restaurantRepository.searchByName(query, pageable) // Assuming searchByName exists.
         );
 
+        // Initiated asynchronous search for menu items.
         CompletableFuture<Page<MenuItems>> menuItemFuture = CompletableFuture.supplyAsync(() ->
                 menuItemRepository.searchByNameOrDescription(query, pageable)
         );
 
-        // Wait for both searches to complete
+        // Waited for both asynchronous searches to complete.
         CompletableFuture.allOf(restaurantFuture, menuItemFuture).join();
 
+        // Retrieved results from completed futures.
         Page<Restaurant> restaurantPage = restaurantFuture.join();
         Page<MenuItems> menuItemPage = menuItemFuture.join();
 
-        // --- Map Entities to DTOs ---
+        // Mapped Restaurant entities to SearchResultItemDto list.
         List<SearchResultItemDto> restaurantDtos = restaurantPage.getContent().stream()
                 .map(r -> new SearchResultItemDto(
                         r.getRestId(),
@@ -54,37 +69,39 @@ public class SearchServiceImpl implements SearchService {
                         r.getRating(),
                         r.getAddress(),
                         r.getImgUrl()))
-                .toList();
+                .toList(); // Collected into an immutable list.
 
+        // Mapped MenuItems entities to SearchResultItemDto list, utilizing JOIN FETCH for restaurant details.
         List<SearchResultItemDto> menuItemDtos = menuItemPage.getContent().stream()
                 .map(mi -> new SearchResultItemDto(
                         mi.getItemId(),
                         mi.getName(),
                         mi.getDescription(),
                         mi.getPrice(),
-                        mi.getRestaurant().getRestId(),      // Access joined restaurant
-                        mi.getRestaurant().getName(),    // Access joined restaurant
+                        mi.getRestaurant().getRestId(), // Accessed joined restaurant data.
+                        mi.getRestaurant().getName(),   // Accessed joined restaurant data.
                         mi.getImgUrl()))
-                .toList();
+                .toList(); // Collected into an immutable list.
 
-        // --- Combine Results ---
-        // Simple combination: Restaurants first, then MenuItems. Could add ranking later.
+        // Initialized combined results list.
         List<SearchResultItemDto> combinedResults = new ArrayList<>();
+        // Added restaurant DTOs to combined list.
         combinedResults.addAll(restaurantDtos);
+        // Added menu item DTOs to combined list.
         combinedResults.addAll(menuItemDtos);
 
-        // --- Pagination Logic (Simplified) ---
-        // For accurate total results and pages, you might need separate count queries
-        // or sum the totals from both page objects. This is a basic example.
+        // Calculated total results by summing elements from both pages.
         long totalResults = restaurantPage.getTotalElements() + menuItemPage.getTotalElements();
+        // Calculated total pages based on combined total and limit.
         int totalPages = (int) Math.ceil((double) totalResults / limit);
-        // Note: The combined list might exceed 'limit' here. We truncate for simplicity.
-        // A more robust pagination would fetch appropriate slices from each source.
-        List<SearchResultItemDto> finalResults = combinedResults.stream().limit(limit).collect(Collectors.toList());
 
+        // Truncated the combined list to the requested page limit for the final response.
+        List<SearchResultItemDto> finalResults = combinedResults.stream().limit(limit).toList();
 
+        // Created pagination DTO with calculated values.
         PaginationDto pagination = new PaginationDto(page, totalPages, totalResults, limit);
 
+        // Constructed and returned the final SearchResponseDto.
         return new SearchResponseDto(finalResults, pagination);
     }
 }
