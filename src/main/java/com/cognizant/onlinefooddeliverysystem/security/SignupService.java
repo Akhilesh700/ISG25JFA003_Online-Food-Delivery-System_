@@ -63,10 +63,7 @@ public class SignupService {
         return new CustomerSignUpResponseDto(
                 user.getEmail(),
                 user.getRole(),
-                customer.getDob(),
                 user.getUserId(),
-                customer.getPhone(),
-                customer.getName(),
                 savedCart.getId()
         );
     }
