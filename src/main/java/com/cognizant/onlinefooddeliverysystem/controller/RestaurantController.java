@@ -2,6 +2,7 @@ package com.cognizant.onlinefooddeliverysystem.controller;
 
 import com.cognizant.onlinefooddeliverysystem.dto.order.AcceptRejectOrderResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.restaurant.RestaurantOrderHistoryResponseDTO;
+import com.cognizant.onlinefooddeliverysystem.model.MenuItems;
 import com.cognizant.onlinefooddeliverysystem.model.Order;
 import com.cognizant.onlinefooddeliverysystem.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,11 @@ public class RestaurantController {
     @GetMapping("order-history")
     public List<RestaurantOrderHistoryResponseDTO> getOrderHistoryByRestaurant(){
         return restaurantService.getOrderHistoryByRestaurant();
+    }
+
+    @GetMapping("menu")
+    public List<MenuItems> getMenuItems(){
+        return restaurantService.getMenuItems();
     }
 
 }
