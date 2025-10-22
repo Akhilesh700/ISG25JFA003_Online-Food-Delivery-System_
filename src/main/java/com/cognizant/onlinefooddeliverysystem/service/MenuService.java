@@ -121,6 +121,27 @@ public class MenuService {
                 .build();
 
     }
+    public void deleteMenuItemById(Long menuItemId) {
+        // First, check if the entity exists. This provides a better error message.
+        User user = getVerifiedUser.getVerifiedUser();
+        if(user == null) {
+            throw  new RestaurantNotFoundException("User not found with JWT Token.");
+        }
+        Restaurant restaurant = restaurantRepository.findByUser_UserId(user.getUserId());
+        if(restaurant == null) {
+            throw  new RestaurantNotFoundException("User is not a Restaurant. with user id: " + user.getUserId());
+        }
+        if (!menuRepository.existsById(menuItemId)) {
+            throw new MenuItemNotFoundException("Cannot delete. Menu item not found with id: " + menuItemId);
+        }
+        MenuItems menuItemToDelete = menuRepository.findById(menuItemId).orElseThrow(
+                () -> new MenuItemNotFoundException("Menu item not found with id: " + menuItemId)
+        );
+        if(restaurant.getRestId() != menuItemToDelete.getRestaurant().getRestId()) {
+            throw new IllegalArgumentException("This menu item with id: " + menuItemId + " does not belongs to restaurant with id: " + restaurant.getRestId());
+        }
 
+        menuRepository.deleteById(menuItemId);
+    }
 
 }

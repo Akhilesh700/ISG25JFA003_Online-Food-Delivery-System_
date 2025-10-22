@@ -91,7 +91,7 @@ class DeliveryControllerTest {
         Integer restaurantId = 1;
         List<UnassignedOrderDTO> unassignedOrders = List.of(unassignedOrderDTO);
         ResponseEntity<List<UnassignedOrderDTO>> responseEntity = new ResponseEntity<>(unassignedOrders, HttpStatus.OK);
-        when(deliveryService.getUnassignedOrders(restaurantId)).thenReturn(responseEntity);
+        when(deliveryService.getUnassignedOrders()).thenReturn(responseEntity);
 
         // Act & Assert
         mockMvc.perform(get(API_BASE_PATH + "/unassigned")

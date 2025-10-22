@@ -6,8 +6,10 @@ import com.cognizant.onlinefooddeliverysystem.dto.order.GetOrderHistoryByDeliver
 import com.cognizant.onlinefooddeliverysystem.exception.InvalidRequestException;
 import com.cognizant.onlinefooddeliverysystem.exception.ResourceNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.exception.StatusNotChangedException;
+import com.cognizant.onlinefooddeliverysystem.exception.menu.RestaurantNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.model.*;
 import com.cognizant.onlinefooddeliverysystem.repository.DeliveryDao;
+import com.cognizant.onlinefooddeliverysystem.repository.RestaurantRepository;
 import com.cognizant.onlinefooddeliverysystem.service.DeliveryService;
 import com.cognizant.onlinefooddeliverysystem.util.GetVerifiedUser;
 import com.cognizant.onlinefooddeliverysystem.util.OrderIdDeliveryId;
@@ -45,13 +47,22 @@ public class DeliveryServiceImpl implements DeliveryService {
     private final DeliveryAgentDao deliveryAgentDao;
     private final ModelMapper modelMapper;
     private final GetVerifiedUser getVerifiedUser;
-
+    private final RestaurantRepository restaurantRepository;
 
     @Override
-    public ResponseEntity<List<UnassignedOrderDTO>> getUnassignedOrders(Integer restaurantId) {
+    public ResponseEntity<List<UnassignedOrderDTO>> getUnassignedOrders() {
 
-        logger.info("Fetching unassigned orders for restaurant ID: {}", restaurantId);
-        List<UnassignedOrderDTO> unassignedOrderDTOS = orderRepository.findUnassignedOrders(restaurantId);
+        User user = getVerifiedUser.getVerifiedUser();
+        if(user == null) {
+            throw  new RestaurantNotFoundException("User not found with JWT Token.");
+        }
+        Restaurant restaurant = restaurantRepository.findByUser_UserId(user.getUserId());
+        if(restaurant == null) {
+            throw  new RestaurantNotFoundException("User is not a Restaurant. with user id: " + user.getUserId());
+        }
+
+        logger.info("Fetching unassigned orders for restaurant ID: {}", restaurant.getRestId());
+        List<UnassignedOrderDTO> unassignedOrderDTOS = orderRepository.findUnassignedOrders(restaurant.getRestId());
         return new ResponseEntity<>(unassignedOrderDTOS, HttpStatus.OK);
     }
 

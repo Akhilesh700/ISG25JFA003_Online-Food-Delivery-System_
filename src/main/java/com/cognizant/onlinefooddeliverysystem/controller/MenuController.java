@@ -40,7 +40,7 @@ MenuController {
             return service.getAllMenuByRestaurantID(restID);
     }
 
-    @PostMapping("/update-menu/{menuItemId}")
+    @PutMapping("/update-menu/{menuItemId}")
     public ResponseEntity<UpdateEntityResponseDto> updateMenuItemByMenuItemId(@PathVariable Long menuItemId, @RequestBody UpdateMenuItemRequestDto requestDto){
         return ResponseEntity.ok(service.updateMenuItemByMenuItemId(menuItemId, requestDto));
     }
@@ -49,6 +49,9 @@ MenuController {
     public ResponseEntity<RestaurantResponseDTO> getRestaurantById(@PathVariable Integer id){
         return  ResponseEntity.ok(service.getRestaurantById(id));
     }
-
-
+    @DeleteMapping("/delete/{menuItemId}")
+    public ResponseEntity<String> deleteMenuItem(@PathVariable Long menuItemId) {
+        service.deleteMenuItemById(menuItemId);
+        return ResponseEntity.ok("Menu item with ID " + menuItemId + " was deleted successfully.");
+    }
 }
