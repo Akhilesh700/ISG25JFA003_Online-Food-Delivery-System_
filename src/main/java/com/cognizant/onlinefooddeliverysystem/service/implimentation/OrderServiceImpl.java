@@ -1,9 +1,7 @@
 package com.cognizant.onlinefooddeliverysystem.service.implimentation;
 
-import com.cognizant.onlinefooddeliverysystem.dto.order.GetOrderHistoryResponseDto;
-import com.cognizant.onlinefooddeliverysystem.dto.order.PlaceOrderRequestDto;
-import com.cognizant.onlinefooddeliverysystem.dto.order.PlaceOrderResponseDto;
-import com.cognizant.onlinefooddeliverysystem.dto.order.UpdatePaymentRequestDto;
+import com.cognizant.onlinefooddeliverysystem.dto.delivery.DeliveryInfoDto;
+import com.cognizant.onlinefooddeliverysystem.dto.order.*;
 import com.cognizant.onlinefooddeliverysystem.dto.payment.PaymentResponseDTO;
 import com.cognizant.onlinefooddeliverysystem.exception.MenuItemNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.exception.ResourceNotFoundException;
@@ -37,6 +35,7 @@ public class OrderServiceImpl implements OrderService {
     private final GetVerifiedUser getVerifiedUser;
     private final MenuItemRepository menuItemRepository;
     private PaymentRepository paymentRepository;
+    private final DeliveryDao deliveryRepository;
 
     private Order createOrder(Cart cart, List<CartItem> cartItems, Status placedStatus, PlaceOrderRequestDto request){
         Order newOrder = new Order();
@@ -149,5 +148,54 @@ public class OrderServiceImpl implements OrderService {
             }
             orderRepository.save(order);
         }
+    }
+
+    public OrderInfoResponseDto getOrderInfo(Integer orderId){
+        User user = getVerifiedUser.getVerifiedUser();
+
+        Order order = orderRepository.findOrderByOrderId(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID: " + orderId));
+
+        Customer customer = customerRepository.findByUser_UserId(user.getUserId());
+        if(customer == null) {
+            throw  new ResourceNotFoundException("Customer with user id: " + user.getUserId() + " not found.");
+        }
+
+        // TODO: change the illegalArgumentException
+        if(order.getCustomer().getCustId() != customer.getCustId()){
+            throw new IllegalArgumentException("This order does not belongs to customer: " + customer.getCustId());
+        }
+
+        List<OrderItemDto> itemDtos = orderItemRepository.findOrderItemDtosByOrderId(orderId);
+
+        DeliveryInfoDto deliveryInfoDto = deliveryRepository.findDeliveryInfoByOrderId(orderId)
+                .orElse(DeliveryInfoDto.builder()
+                        .deliveryId(null)
+                        .agentId(null)
+                        .agentName(null)
+                        .agentName(null)
+                        .pickupTime(null)
+                        .eta(null)
+                        .build());
+
+        return OrderInfoResponseDto.builder()
+                .orderId(order.getOrderId())
+                .deliveryId(deliveryInfoDto.getDeliveryId())
+                .agentId(deliveryInfoDto.getAgentId())
+                .restaurantId(order.getRestaurant().getRestId())
+                .restaurantName(order.getRestaurant().getName())
+                .restaurantImgUrl(order.getRestaurant().getImgUrl())
+                .customer(order.getCustomer().getName())
+                .customerPhone(order.getCustomer().getPhone())
+                .orderTime(order.getOrderTime())
+                .pickUpAddress(order.getRestaurant().getAddress())
+                .deliveryAddress(order.getCustomer().getAddress())
+                .pickupTime(deliveryInfoDto.getPickupTime())
+                .eta(deliveryInfoDto.getEta())
+                .agentName(deliveryInfoDto.getAgentName())
+                .agentPhone(deliveryInfoDto.getAgentPhone())
+                .status(order.getStatus().getStatusType())
+                .totalOrderItems(itemDtos)
+                .build();
     }
 }

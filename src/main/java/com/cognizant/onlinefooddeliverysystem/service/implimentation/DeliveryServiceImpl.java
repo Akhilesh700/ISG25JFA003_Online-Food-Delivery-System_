@@ -8,14 +8,11 @@ import com.cognizant.onlinefooddeliverysystem.exception.ResourceNotFoundExceptio
 import com.cognizant.onlinefooddeliverysystem.exception.StatusNotChangedException;
 import com.cognizant.onlinefooddeliverysystem.exception.menu.RestaurantNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.model.*;
-import com.cognizant.onlinefooddeliverysystem.repository.DeliveryDao;
-import com.cognizant.onlinefooddeliverysystem.repository.RestaurantRepository;
+import com.cognizant.onlinefooddeliverysystem.repository.*;
 import com.cognizant.onlinefooddeliverysystem.service.DeliveryService;
 import com.cognizant.onlinefooddeliverysystem.util.GetVerifiedUser;
 import com.cognizant.onlinefooddeliverysystem.util.OrderIdDeliveryId;
 import com.cognizant.onlinefooddeliverysystem.dto.order.UnassignedOrderDTO;
-import com.cognizant.onlinefooddeliverysystem.repository.DeliveryAgentDao;
-import com.cognizant.onlinefooddeliverysystem.repository.OrderRepository;
 import com.cognizant.onlinefooddeliverysystem.util.ProbabilisticQuantum;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -48,6 +45,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     private final ModelMapper modelMapper;
     private final GetVerifiedUser getVerifiedUser;
     private final RestaurantRepository restaurantRepository;
+    private final CustomerRepository customerRepository;
 
     @Override
     public ResponseEntity<List<UnassignedOrderDTO>> getUnassignedOrders() {
@@ -201,6 +199,8 @@ public class DeliveryServiceImpl implements DeliveryService {
         }
         return orderRepository.findOrderHistory(agent.getAgentId());
     }
+
+
 
 
 }

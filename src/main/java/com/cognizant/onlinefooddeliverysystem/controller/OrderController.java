@@ -1,8 +1,5 @@
 package com.cognizant.onlinefooddeliverysystem.controller;
-import com.cognizant.onlinefooddeliverysystem.dto.order.GetOrderHistoryResponseDto;
-import com.cognizant.onlinefooddeliverysystem.dto.order.PlaceOrderRequestDto;
-import com.cognizant.onlinefooddeliverysystem.dto.order.PlaceOrderResponseDto;
-import com.cognizant.onlinefooddeliverysystem.dto.order.UpdatePaymentRequestDto;
+import com.cognizant.onlinefooddeliverysystem.dto.order.*;
 import com.cognizant.onlinefooddeliverysystem.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,5 +29,10 @@ public class OrderController {
     public ResponseEntity<Void> updatePaymentStatus(@PathVariable Integer orderId, @RequestBody UpdatePaymentRequestDto request) {
         orderService.updateOrderPaymentStatus(orderId, request);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/{orderId}")
+    public ResponseEntity<OrderInfoResponseDto> getOrderInfo(@PathVariable Integer orderId) {
+        return ResponseEntity.ok(orderService.getOrderInfo(orderId));
     }
 }

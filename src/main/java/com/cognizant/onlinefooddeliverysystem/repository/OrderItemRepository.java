@@ -1,5 +1,6 @@
 package com.cognizant.onlinefooddeliverysystem.repository;
 
+import com.cognizant.onlinefooddeliverysystem.dto.order.OrderItemDto;
 import com.cognizant.onlinefooddeliverysystem.model.OrderItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,4 +20,13 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Integer> {
     Float findMaxPrepTimeByOrderId(@Param("orderId") Integer orderId);
 
     List<OrderItem> findByOrder_OrderId(Integer orderId);
+
+    @Query("SELECT NEW com.cognizant.onlinefooddeliverysystem.dto.order.OrderItemDto(" +
+            "   oi.orderItemId, " +
+            "   mi.name, " +  // Assuming MenuItems entity has a 'name' field
+            "   oi.quantity, " +
+            "   oi.price) " +
+            "FROM OrderItem oi JOIN oi.menuItems mi " + // Join to get item name
+            "WHERE oi.order.orderId = :orderId")
+    List<OrderItemDto> findOrderItemDtosByOrderId(@Param("orderId") Integer orderId);
 }

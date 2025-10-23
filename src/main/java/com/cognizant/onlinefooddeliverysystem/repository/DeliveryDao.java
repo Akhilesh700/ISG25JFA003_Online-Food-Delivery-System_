@@ -1,5 +1,6 @@
 package com.cognizant.onlinefooddeliverysystem.repository;
 
+import com.cognizant.onlinefooddeliverysystem.dto.delivery.DeliveryInfoDto;
 import com.cognizant.onlinefooddeliverysystem.model.Delivery;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,4 +19,14 @@ public interface DeliveryDao extends JpaRepository<Delivery, Integer> {
             "where o.orderid = :orderId;", nativeQuery = true)
     Optional<String> getDeliveryStatus(@Param("orderId") Integer orderId);
 
+    @Query("SELECT new com.cognizant.onlinefooddeliverysystem.dto.delivery.DeliveryInfoDto(" +
+            "d.pickupTime, " +
+            "d.eta, " +
+            "da.name, " +
+            "da.phone, " +
+            "d.deliveryId, " +
+            "da.agentId) " +
+            "FROM Delivery d JOIN d.deliveryAgent da " +
+            "WHERE d.order.orderId = :orderId")
+    Optional<DeliveryInfoDto> findDeliveryInfoByOrderId(@Param("orderId") Integer orderId);
 }
