@@ -23,7 +23,7 @@ public interface DeliverAgentRespository extends JpaRepository<DeliveryAgent, In
             "a.identityProofType, " +
             "a.identityProofNo) " +
             "FROM DeliveryAgent a " +
-            "JOIN a.user u" +
+            "JOIN a.user u " +
             "WHERE a.agentId = :agentId")
     DeliveryAgentProfileDTO findDeliveryAgentProfile(@Param("agentId") Integer agentId);
 
