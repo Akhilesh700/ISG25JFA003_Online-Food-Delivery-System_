@@ -29,7 +29,7 @@ MenuController {
 
     // Method 2: Endpoint for adding menu to a restaurant by restId
     @PostMapping("/")
-    public ResponseEntity<CreateMenuItemResponseDto> addMenuItemByRestaurantId( @RequestBody CreateMenuItemRequestDto createMenuItemRequestDto) throws Exception {
+    public ResponseEntity<CreateMenuItemResponseDto> addMenuItemByRestaurantId( @RequestBody CreateMenuItemRequestDto createMenuItemRequestDto){
 
         return ResponseEntity.ok(service.addMenuItem(createMenuItemRequestDto));
     }

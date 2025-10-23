@@ -1,6 +1,7 @@
 package com.cognizant.onlinefooddeliverysystem.controller;
 
 import com.cognizant.onlinefooddeliverysystem.dto.UpdateEntityResponseDto;
+import com.cognizant.onlinefooddeliverysystem.dto.customer.CustomerProfileResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.customer.UpdateProfileCustomerRequestDto;
 import com.cognizant.onlinefooddeliverysystem.dto.search.SearchResponseDto;
 import com.cognizant.onlinefooddeliverysystem.service.CustomerService;
@@ -34,5 +35,10 @@ public class CustomerController {
     @PutMapping("update-profile")
     public ResponseEntity<UpdateEntityResponseDto> updateCustomerProfile(@RequestBody UpdateProfileCustomerRequestDto requestDto){
         return new ResponseEntity<>(customerService.updateCustomerProfile(requestDto), HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("")
+    public ResponseEntity<CustomerProfileResponseDto> getUserProfile(){
+        return new ResponseEntity<>(customerService.getProfile(), HttpStatus.OK);
     }
 }

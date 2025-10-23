@@ -3,7 +3,6 @@ package com.cognizant.onlinefooddeliverysystem.controller;
 import com.cognizant.onlinefooddeliverysystem.dto.order.AcceptRejectOrderResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.restaurant.RestaurantOrderHistoryResponseDTO;
 import com.cognizant.onlinefooddeliverysystem.model.MenuItems;
-import com.cognizant.onlinefooddeliverysystem.model.Order;
 import com.cognizant.onlinefooddeliverysystem.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

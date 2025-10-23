@@ -1,8 +1,10 @@
 package com.cognizant.onlinefooddeliverysystem.service.implimentation;
 
 import com.cognizant.onlinefooddeliverysystem.dto.UpdateEntityResponseDto;
+import com.cognizant.onlinefooddeliverysystem.dto.customer.CustomerProfileResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.customer.UpdateProfileCustomerRequestDto;
 import com.cognizant.onlinefooddeliverysystem.exception.CustomerNotFoundException;
+import com.cognizant.onlinefooddeliverysystem.exception.ResourceNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.model.Customer;
 import com.cognizant.onlinefooddeliverysystem.model.User;
 import com.cognizant.onlinefooddeliverysystem.repository.CustomerRepository;
@@ -42,6 +44,23 @@ public class CustomerServiceImpl implements CustomerService {
         return new UpdateEntityResponseDto(
                 nonNullCustomerField.size(),
                 nonNullCustomerField
+        );
+    }
+
+    @Override
+    public CustomerProfileResponseDto getProfile() {
+        User user = getVerifiedUser.getVerifiedUser();
+        Customer customer = customerRepository.findByUser_UserId(user.getUserId());
+        if(customer == null){
+            throw new ResourceNotFoundException("User is not a customer");
+        }
+        return new CustomerProfileResponseDto(
+                customer.getName(),
+                user.getEmail(),
+                customer.getDob(),
+                customer.getPhone(),
+                customer.getAddress(),
+                customer.getPreferredPayment()
         );
     }
 }
