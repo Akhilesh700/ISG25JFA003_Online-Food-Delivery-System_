@@ -5,10 +5,8 @@ import com.cognizant.onlinefooddeliverysystem.dto.restaurant.RestaurantOrderHist
 import com.cognizant.onlinefooddeliverysystem.exception.InvalidRequestException;
 import com.cognizant.onlinefooddeliverysystem.exception.ResourceNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.exception.menu.RestaurantNotFoundException;
-import com.cognizant.onlinefooddeliverysystem.model.Order;
-import com.cognizant.onlinefooddeliverysystem.model.Restaurant;
-import com.cognizant.onlinefooddeliverysystem.model.Status;
-import com.cognizant.onlinefooddeliverysystem.model.User;
+import com.cognizant.onlinefooddeliverysystem.model.*;
+import com.cognizant.onlinefooddeliverysystem.repository.MenuItemRepository;
 import com.cognizant.onlinefooddeliverysystem.repository.OrderRepository;
 import com.cognizant.onlinefooddeliverysystem.repository.RestaurantRepository;
 import com.cognizant.onlinefooddeliverysystem.repository.StatusRepository;
@@ -28,6 +26,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final OrderRepository orderRepository;
     private final StatusRepository statusRepository;
+    private final MenuItemRepository menuItemRepository;
 
     @Override
     public List<RestaurantOrderHistoryResponseDTO> getOrderHistoryByRestaurant() {
@@ -80,5 +79,16 @@ public class RestaurantServiceImpl implements RestaurantService {
                 toBeUpdatedStatus.getStatusType(),
                 "Order has been successfully " + action + "ed"
         );
+    }
+
+    @Override
+    public List<MenuItems> getMenuItems() {
+        User user = getVerifiedUser.getVerifiedUser();
+        Restaurant restaurant = restaurantRepository.findByUser_UserId(user.getUserId());
+        if(restaurant == null){
+            throw new ResourceNotFoundException("This user is not a restaurant with user id : " + user.getUserId());
+        }
+
+        return menuItemRepository.findByRestaurant_RestId(restaurant.getRestId());
     }
 }
