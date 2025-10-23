@@ -35,9 +35,9 @@ MenuController {
     }
 
     // Method 3: Endpoint for getting the menu items of a particular restaurant by restaurant ID
-    @GetMapping("/{restID}")
-    public  List<MenuItems> getAllMenuItemsByRestaurantID(@PathVariable Integer restID) throws Exception {
-            return service.getAllMenuByRestaurantID(restID);
+    @GetMapping("/")
+    public  List<MenuItems> getAllMenuItemsByRestaurantID() throws Exception {
+            return service.getAllMenuByRestaurantID();
     }
 
     @PutMapping("/update-menu/{menuItemId}")

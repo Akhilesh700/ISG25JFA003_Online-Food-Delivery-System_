@@ -40,12 +40,16 @@ public class MenuService {
     public List<MenuItems> getAllMenu(){
         return menuRepository.findAll();
     }
-//  TODO: Write DTO's for each of the response
-    public List<MenuItems> getAllMenuByRestaurantID(int restId) throws Exception{
-        List<MenuItems> menuItemsList = menuRepository.findByRestaurant_RestId(restId);
-        return menuItemsList;
+
+    public List<MenuItems> getAllMenuByRestaurantID() throws Exception{
+        User user = getVerifiedUser.getVerifiedUser();
+        Restaurant restaurant = restaurantRepository.findByUser_UserId(user.getUserId());
+        if(restaurant == null){
+            throw new RestaurantNotFoundException("User is not a restaurant!");
+        }
+        return menuRepository.findByRestaurant_RestId(restaurant.getRestId());
     }
-// TODO: Dynamic URL for menu searching
+
     public CreateMenuItemResponseDto addMenuItem(CreateMenuItemRequestDto createMenuItemRequestDto){
         User user = getVerifiedUser.getVerifiedUser();
         if(user == null){
