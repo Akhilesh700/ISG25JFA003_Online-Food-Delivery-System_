@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.swing.text.html.Option;
+import java.util.Optional;
+
 @Repository
 public interface DeliverAgentRespository extends JpaRepository<DeliveryAgent, Integer> {
 
@@ -22,4 +25,7 @@ public interface DeliverAgentRespository extends JpaRepository<DeliveryAgent, In
             "FROM DeliveryAgent a " +
             "JOIN a.user u")
     DeliveryAgentProfileDTO findDeliveryAgentProfile(@Param("agentId") Integer agentId);
+
+    @Query("SELECT status FROM DeliveryAgent")
+    Optional<DeliveryAgent.Status> findDeliveryAgentStatus();
 }

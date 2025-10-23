@@ -33,4 +33,9 @@ public class DeliveryAgentController {
         return deliveryAgentService.getDeliveryAgentProfile();
     }
 
+    @GetMapping("/status")
+    public ResponseEntity<DeliveryAgent.Status> getDeliveryAgentStatus() {
+        return ResponseEntity.ok(deliveryAgentService.getDeliveryAgentStatus());
+    }
+
 }

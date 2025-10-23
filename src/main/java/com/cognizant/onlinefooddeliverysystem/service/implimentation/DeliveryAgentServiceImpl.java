@@ -26,4 +26,18 @@ public class DeliveryAgentServiceImpl implements DeliveryAgentService {
 
         return deliverAgentRespository.findDeliveryAgentProfile(agent.getAgentId());
     }
+
+    @Override
+    public DeliveryAgent.Status getDeliveryAgentStatus(){
+        User user = getVerifiedUser.getVerifiedUser();
+        DeliveryAgent agent = deliverAgentRespository.findByUser_UserId(user.getUserId());
+        if(agent == null) {
+            throw new ResourceNotFoundException("This user is not a delivery agent");
+        }
+
+        DeliveryAgent.Status status = deliverAgentRespository.findDeliveryAgentStatus()
+                .orElseThrow(() ->new ResourceNotFoundException("Delivery Status not found for agent ID: " + agent.getAgentId()));
+
+        return status;
+    }
 }
