@@ -1,10 +1,7 @@
 package com.cognizant.onlinefooddeliverysystem.service;
 
 
-import com.cognizant.onlinefooddeliverysystem.dto.order.GetOrderHistoryResponseDto;
-import com.cognizant.onlinefooddeliverysystem.dto.order.PlaceOrderRequestDto;
-import com.cognizant.onlinefooddeliverysystem.dto.order.PlaceOrderResponseDto;
-import com.cognizant.onlinefooddeliverysystem.dto.order.UpdatePaymentRequestDto;
+import com.cognizant.onlinefooddeliverysystem.dto.order.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,4 +18,5 @@ public interface OrderService {
     @Transactional
     void updateOrderPaymentStatus(Integer orderId, UpdatePaymentRequestDto request);
 
+    OrderInfoResponseDto getOrderInfo(Integer orderId);
 }

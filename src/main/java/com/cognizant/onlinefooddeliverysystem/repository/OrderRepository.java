@@ -85,4 +85,11 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             "JOIN d.deliveryAgent a\n" +
             "WHERE a.agentId = :agentId")
     List<GetOrderHistoryByDeliveryAgentResponse> findOrderHistory(@Param("agentId") Integer agentId);
+
+    @Query("SELECT o FROM Order o " +
+            "JOIN FETCH o.customer c " +
+            "JOIN FETCH o.restaurant r " +
+            "JOIN FETCH o.status s " +
+            "WHERE o.orderId = :orderId")
+    Optional<Order> findOrderInfoById(@Param("orderId") Integer orderId);
 }

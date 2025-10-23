@@ -82,6 +82,7 @@ public class MenuService {
         MenuItems menuItemToUpdate = menuRepository.findById(menuItemId).orElseThrow(
                 () -> new MenuItemNotFoundException("Menu item not found with id: " + menuItemId)
         );
+        // TODO: change the illegalArgumentException
         if(restaurant.getRestId() != menuItemToUpdate.getRestaurant().getRestId()) {
             throw new IllegalArgumentException("This menu item with id: " + menuItemId + " does not belongs to restaurant with id: " + restaurant.getRestId());
         }

@@ -56,6 +56,7 @@ public class DeliveryAssignmentServiceImpl {
         DeliveryAgent selectedAgent = findAndSelectAvailableAgent();
 
         // 4. Create and save the new delivery record
+        selectedAgent.setStatus(DeliveryAgent.Status.InDelivery);
         Delivery newDelivery = createDelivery(order, selectedAgent);
         deliveryDao.save(newDelivery);
 
