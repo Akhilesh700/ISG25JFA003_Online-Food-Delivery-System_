@@ -34,10 +34,16 @@ MenuController {
         return ResponseEntity.ok(service.addMenuItem(createMenuItemRequestDto));
     }
 
-    // Method 3: Endpoint for getting the menu items of a particular restaurant by restaurant ID
+    // Method 3: Endpoint for getting the menu items of a particular restaurant by restaurant from JWT Token
     @GetMapping("/")
-    public  List<MenuItems> getAllMenuItemsByRestaurantID() throws Exception {
-            return service.getAllMenuByRestaurantID();
+    public  List<MenuItems> getAllMenuItemsByRestaurantJWT() throws Exception {
+            return service.getAllMenuByRestaurantJWT();
+    }
+
+    // Method 3: Endpoint for getting the menu items of a particular restaurant by restaurant ID
+    @GetMapping("/{restaurantId}")
+    public  List<MenuItems> getAllMenuItemsByRestaurantID(@PathVariable Integer restaurantId) throws Exception {
+        return service.getAllMenuByRestaurantID(restaurantId);
     }
 
     @PutMapping("/update-menu/{menuItemId}")

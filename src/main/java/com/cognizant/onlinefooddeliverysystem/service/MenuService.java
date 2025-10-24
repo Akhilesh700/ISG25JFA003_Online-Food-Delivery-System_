@@ -41,7 +41,7 @@ public class MenuService {
         return menuRepository.findAll();
     }
 
-    public List<MenuItems> getAllMenuByRestaurantID() throws Exception{
+    public List<MenuItems> getAllMenuByRestaurantJWT() throws Exception{
         User user = getVerifiedUser.getVerifiedUser();
         Restaurant restaurant = restaurantRepository.findByUser_UserId(user.getUserId());
         if(restaurant == null){
@@ -149,4 +149,7 @@ public class MenuService {
         menuRepository.deleteById(menuItemId);
     }
 
+    public List<MenuItems> getAllMenuByRestaurantID(Integer restaurantId) {
+        return menuRepository.findByRestaurant_RestId(restaurantId);
+    }
 }
