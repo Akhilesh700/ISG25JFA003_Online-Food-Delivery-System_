@@ -12,6 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class DeliveryAgentProfileDTO {
     private Integer agentId;
+    private String name;
     private String email;
     private String phone;
     private DeliveryAgent.Status status;

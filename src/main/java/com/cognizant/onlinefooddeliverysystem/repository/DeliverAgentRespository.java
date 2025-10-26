@@ -17,6 +17,7 @@ public interface DeliverAgentRespository extends JpaRepository<DeliveryAgent, In
 
     @Query("SELECT new com.cognizant.onlinefooddeliverysystem.dto.deliveryagent.DeliveryAgentProfileDTO(" +
             "a.agentId, " +
+            "a.name, " +
             "u.email, " +
             "a.phone, " +
             "a.status, " +
