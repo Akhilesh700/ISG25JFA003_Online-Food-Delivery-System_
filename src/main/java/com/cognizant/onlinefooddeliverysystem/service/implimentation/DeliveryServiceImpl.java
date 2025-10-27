@@ -149,6 +149,15 @@ public class DeliveryServiceImpl implements DeliveryService {
 
         logger.info("Updating status for order ID: {} to status ID: {}", orderId, statusId);
 
+        Order order = orderRepository.findOrderByOrderId(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order with order Id: " + orderId + " not found."));
+
+        Status status = order.getStatus();
+        if(status.getStatusId() == 5 || status.getStatusId() == 6){
+            throw new StatusNotChangedException("You can not change status if it is delivered or Failed.");
+        }
+
+
         boolean flag = false;
 
         int numberOfRowsAffected = orderRepository.updateOrderStatus(orderId, statusId);
@@ -157,8 +166,11 @@ public class DeliveryServiceImpl implements DeliveryService {
               throw new StatusNotChangedException("Status Not Changed");
         }else {
             flag = true;
+            if(statusId == 5){
+                DeliveryAgent deliveryAgent = order.getDelivery().getDeliveryAgent();
+                deliveryAgent.setStatus(DeliveryAgent.Status.Available);
+            }
         }
-
 
         return new ResponseEntity<>(flag, HttpStatus.OK);
     }

@@ -35,7 +35,7 @@ public class DeliveryAgentServiceImpl implements DeliveryAgentService {
             throw new ResourceNotFoundException("This user is not a delivery agent");
         }
 
-        DeliveryAgent.Status status = deliverAgentRespository.findDeliveryAgentStatus()
+        DeliveryAgent.Status status = deliverAgentRespository.findDeliveryAgentStatus(agent.getAgentId())
                 .orElseThrow(() ->new ResourceNotFoundException("Delivery Status not found for agent ID: " + agent.getAgentId()));
 
         return status;

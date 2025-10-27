@@ -28,6 +28,6 @@ public interface DeliverAgentRespository extends JpaRepository<DeliveryAgent, In
             "WHERE a.agentId = :agentId")
     DeliveryAgentProfileDTO findDeliveryAgentProfile(@Param("agentId") Integer agentId);
 
-    @Query("SELECT status FROM DeliveryAgent")
-    Optional<DeliveryAgent.Status> findDeliveryAgentStatus();
+    @Query("SELECT status FROM DeliveryAgent Where agentId = :agentId")
+    Optional<DeliveryAgent.Status> findDeliveryAgentStatus(@Param("agentId") Integer agentId);
 }
