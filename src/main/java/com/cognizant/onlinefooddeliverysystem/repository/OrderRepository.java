@@ -75,6 +75,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             "    r.address,\n" +
             "    c.address,\n" +
             "    s.statusType,\n" +
+            "    o.totalAmount,\n" +
             "(SELECT COUNT(item.id) FROM OrderItem item WHERE item.order = o)\n" +
             ")\n" +
             "FROM Order o\n" +

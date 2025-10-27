@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -21,5 +22,6 @@ public class GetOrderHistoryByDeliveryAgentResponse {
     private String pickUpAddress;
     private String deliveryAddress;
     private Status.StatusType status;
+    private BigDecimal totalAmount;
     private Long totalOrderItems;
 }
