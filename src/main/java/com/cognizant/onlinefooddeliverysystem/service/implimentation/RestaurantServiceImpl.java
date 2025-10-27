@@ -1,8 +1,10 @@
 package com.cognizant.onlinefooddeliverysystem.service.implimentation;
 
 import com.cognizant.onlinefooddeliverysystem.dto.UpdateEntityResponseDto;
+import com.cognizant.onlinefooddeliverysystem.dto.customer.CustomerProfileResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.order.AcceptRejectOrderResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.restaurant.RestaurantOrderHistoryResponseDTO;
+import com.cognizant.onlinefooddeliverysystem.dto.restaurant.RestaurantProfileResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.restaurant.RestaurantProfileUpdateRequestDto;
 import com.cognizant.onlinefooddeliverysystem.exception.CustomerNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.exception.InvalidRequestException;
@@ -120,4 +122,21 @@ public class RestaurantServiceImpl implements RestaurantService {
                 nonNullCustomerField
         );
     }
+
+    @Override
+    public RestaurantProfileResponseDto getRestaurantProfileDetails() {
+        User user = getVerifiedUser.getVerifiedUser();
+        Restaurant restaurant = restaurantRepository.findByUser_UserId(user.getUserId());
+        if(restaurant== null){
+            throw new RestaurantNotFoundException("Restaurant not found with user id : " + user.getUserId());
+        }
+        return new RestaurantProfileResponseDto(
+                restaurant.getName(),
+                restaurant.getPhone(),
+                restaurant.getAddress(),
+                restaurant.getOpenTime(),
+                restaurant.getCloseTime()
+        );
+    }
+
 }
