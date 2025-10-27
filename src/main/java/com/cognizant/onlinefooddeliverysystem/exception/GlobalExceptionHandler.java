@@ -10,6 +10,7 @@ import com.cognizant.onlinefooddeliverysystem.exception.payment.CartNotFoundExce
 import com.cognizant.onlinefooddeliverysystem.exception.payment.InvalidPaymentTypeException;
 import com.cognizant.onlinefooddeliverysystem.exception.payment.InvalidPaymentTypePinException;
 import com.cognizant.onlinefooddeliverysystem.exception.payment.PaymentException;
+import com.cognizant.onlinefooddeliverysystem.exception.refreshtoken.TokenRefreshException;
 import com.cognizant.onlinefooddeliverysystem.exception.signup.UserAlreadyExistsException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -58,6 +59,17 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 "Bad Request",
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(TokenRefreshException.class)
+    public ResponseEntity<ErrorResponse> handleRefreshTokenException(TokenRefreshException ex) {
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "Bad Reqeuest",
                 ex.getMessage()
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
