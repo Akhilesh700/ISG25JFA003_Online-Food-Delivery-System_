@@ -1,6 +1,7 @@
 package com.cognizant.onlinefooddeliverysystem.repository;
 
 import com.cognizant.onlinefooddeliverysystem.dto.order.OrderItemDto;
+import com.cognizant.onlinefooddeliverysystem.dto.restaurant.OrderWiseOrderItemsDto;
 import com.cognizant.onlinefooddeliverysystem.model.OrderItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,10 +24,22 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Integer> {
 
     @Query("SELECT NEW com.cognizant.onlinefooddeliverysystem.dto.order.OrderItemDto(" +
             "   oi.orderItemId, " +
-            "   mi.name, " +  // Assuming MenuItems entity has a 'name' field
+            "   mi.name, " +
             "   oi.quantity, " +
             "   oi.price) " +
-            "FROM OrderItem oi JOIN oi.menuItems mi " + // Join to get item name
+            "FROM OrderItem oi JOIN oi.menuItems mi " +
             "WHERE oi.order.orderId = :orderId")
     List<OrderItemDto> findOrderItemDtosByOrderId(@Param("orderId") Integer orderId);
+
+
+    @Query("SELECT new com.cognizant.onlinefooddeliverysystem.dto.restaurant.OrderWiseOrderItemsDto (" +
+            "mi.name, " +
+            "oi.quantity, " +
+            "oi.price" +
+            ")" +
+            "FROM OrderItem oi " +
+            "JOIN oi.menuItems mi " +
+            "JOIN oi.order o " +
+            "WHERE o.orderId = :orderId")
+    List<OrderWiseOrderItemsDto> findOrderWiseOrderItems(@Param("orderId") Integer orderId);
 }

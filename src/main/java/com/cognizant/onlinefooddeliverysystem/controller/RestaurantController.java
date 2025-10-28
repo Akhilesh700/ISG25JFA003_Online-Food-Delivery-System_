@@ -1,13 +1,12 @@
 package com.cognizant.onlinefooddeliverysystem.controller;
 
 import com.cognizant.onlinefooddeliverysystem.dto.UpdateEntityResponseDto;
-import com.cognizant.onlinefooddeliverysystem.dto.customer.CustomerProfileResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.order.AcceptRejectOrderResponseDto;
-import com.cognizant.onlinefooddeliverysystem.dto.restaurant.RestaurantOrderHistoryResponseDTO;
+import com.cognizant.onlinefooddeliverysystem.dto.restaurant.OrderHistoryByRestaurant;
+import com.cognizant.onlinefooddeliverysystem.dto.restaurant.OrderHistoryResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.restaurant.RestaurantProfileResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.restaurant.RestaurantProfileUpdateRequestDto;
 import com.cognizant.onlinefooddeliverysystem.model.MenuItems;
-import com.cognizant.onlinefooddeliverysystem.model.Restaurant;
 import com.cognizant.onlinefooddeliverysystem.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,7 +28,7 @@ public class RestaurantController {
     }
 
     @GetMapping("order-history")
-    public List<RestaurantOrderHistoryResponseDTO> getOrderHistoryByRestaurant(){
+    public List<OrderHistoryResponseDto> getOrderHistoryByRestaurant(){
         return restaurantService.getOrderHistoryByRestaurant();
     }
 

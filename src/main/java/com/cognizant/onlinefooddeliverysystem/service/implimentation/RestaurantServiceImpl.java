@@ -1,20 +1,13 @@
 package com.cognizant.onlinefooddeliverysystem.service.implimentation;
 
 import com.cognizant.onlinefooddeliverysystem.dto.UpdateEntityResponseDto;
-import com.cognizant.onlinefooddeliverysystem.dto.customer.CustomerProfileResponseDto;
 import com.cognizant.onlinefooddeliverysystem.dto.order.AcceptRejectOrderResponseDto;
-import com.cognizant.onlinefooddeliverysystem.dto.restaurant.RestaurantOrderHistoryResponseDTO;
-import com.cognizant.onlinefooddeliverysystem.dto.restaurant.RestaurantProfileResponseDto;
-import com.cognizant.onlinefooddeliverysystem.dto.restaurant.RestaurantProfileUpdateRequestDto;
-import com.cognizant.onlinefooddeliverysystem.exception.CustomerNotFoundException;
+import com.cognizant.onlinefooddeliverysystem.dto.restaurant.*;
 import com.cognizant.onlinefooddeliverysystem.exception.InvalidRequestException;
 import com.cognizant.onlinefooddeliverysystem.exception.ResourceNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.exception.menu.RestaurantNotFoundException;
 import com.cognizant.onlinefooddeliverysystem.model.*;
-import com.cognizant.onlinefooddeliverysystem.repository.MenuItemRepository;
-import com.cognizant.onlinefooddeliverysystem.repository.OrderRepository;
-import com.cognizant.onlinefooddeliverysystem.repository.RestaurantRepository;
-import com.cognizant.onlinefooddeliverysystem.repository.StatusRepository;
+import com.cognizant.onlinefooddeliverysystem.repository.*;
 import com.cognizant.onlinefooddeliverysystem.service.RestaurantService;
 import com.cognizant.onlinefooddeliverysystem.util.GetVerifiedUser;
 import com.cognizant.onlinefooddeliverysystem.util.ReflectionFilterService;
@@ -24,6 +17,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -34,13 +28,14 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final GetVerifiedUser getVerifiedUser;
     private final RestaurantRepository restaurantRepository;
     private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
     private final StatusRepository statusRepository;
     private final MenuItemRepository menuItemRepository;
     private final ReflectionFilterService reflectionFilterService;
     private final ModelMapper modelMapper;
 
     @Override
-    public List<RestaurantOrderHistoryResponseDTO> getOrderHistoryByRestaurant() {
+    public List<OrderHistoryResponseDto> getOrderHistoryByRestaurant() {
         User user = getVerifiedUser.getVerifiedUser();
         if(user == null) {
             throw new ResourceNotFoundException("User Not Found from JWT token") ;
@@ -49,7 +44,24 @@ public class RestaurantServiceImpl implements RestaurantService {
         if(restaurant == null) {
             throw new ResourceNotFoundException("Restaurant Not Found with user id : " + user.getUserId()) ;
         }
-        return orderRepository.findByRestaurant_RestId(restaurant.getRestId());
+        List<OrderHistoryByRestaurant> orderHistory = orderRepository.findByRestaurant_RestId(restaurant.getRestId());
+        List<OrderHistoryResponseDto> responseDto = new ArrayList<>();
+        orderHistory.stream().map((order) -> {
+            List<OrderWiseOrderItemsDto> orderWiseOrderItems = orderItemRepository.findOrderWiseOrderItems(order.getOrderId());
+            return responseDto.add(
+                new OrderHistoryResponseDto(
+                    order.getOrderId(),
+                    order.getOrderTime(),
+                    order.getSpecialReq(),
+                    order.getTotalAmount(),
+                    order.getCustomerName(),
+                    order.getCustomerPhone(),
+                    order.getStatus(),
+                    orderWiseOrderItems
+                )
+            );
+        }).toList();
+        return responseDto;
     }
 
     @Override

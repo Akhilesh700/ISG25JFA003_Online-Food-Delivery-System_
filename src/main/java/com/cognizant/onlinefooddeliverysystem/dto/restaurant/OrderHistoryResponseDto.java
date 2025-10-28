@@ -8,12 +8,13 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RestaurantOrderHistoryResponseDTO {
+public class OrderHistoryResponseDto {
     private Integer orderId;
     private LocalDateTime orderTime;
     private String specialReq;
@@ -21,4 +22,5 @@ public class RestaurantOrderHistoryResponseDTO {
     private String customerName;
     private String customerPhone;
     private Status.StatusType status;
+    private List<OrderWiseOrderItemsDto> orderItems;
 }
