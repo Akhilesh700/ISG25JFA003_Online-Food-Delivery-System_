@@ -33,6 +33,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final MenuItemRepository menuItemRepository;
     private final ReflectionFilterService reflectionFilterService;
     private final ModelMapper modelMapper;
+    private final DeliveryAssignmentServiceImpl deliveryAssignmentService;
 
     @Override
     public List<OrderHistoryResponseDto> getOrderHistoryByRestaurant() {
@@ -73,6 +74,9 @@ public class RestaurantServiceImpl implements RestaurantService {
         }
         else {
             String statusToUpdate = action.equalsIgnoreCase("accept") ? "PREPARING" : "NOT_ACCEPTED";
+            if(action.equalsIgnoreCase("accept")){
+                deliveryAssignmentService.assignOrder(orderId);
+            }
             User user = getVerifiedUser.getVerifiedUser();
             Restaurant restaurant = restaurantRepository.findByUser_UserId(user.getUserId());
 

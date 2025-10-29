@@ -166,8 +166,8 @@ public class DeliveryServiceImpl implements DeliveryService {
               throw new StatusNotChangedException("Status Not Changed");
         }else {
             flag = true;
-            if(statusId == 5){
-                DeliveryAgent deliveryAgent = order.getDelivery().getDeliveryAgent();
+            DeliveryAgent deliveryAgent = order.getDelivery().getDeliveryAgent();
+            if(statusId == 5 || statusId == 6){
                 deliveryAgent.setStatus(DeliveryAgent.Status.Available);
             }
         }
